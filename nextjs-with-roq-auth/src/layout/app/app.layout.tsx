@@ -2,21 +2,71 @@
   This component showcases the NotificationBell, and ChatMessageBell from ROQ 
 */
 
+import { ReactNode, useCallback } from "react";
 import Head from "next/head";
 import styles from "layout/app/app.layout.module.css";
 import Image from "next/image";
-import Sidebar from "components/sidebar";
-import { NotificationBell, ChatMessageBell, signOut } from "@roq/nextjs";
+import { NotificationBell, ChatMessageBell, signOut, useSession } from "@roq/nextjs";
 import { useRouter } from "next/router";
 import { routes } from "routes";
+
 import Link from "next/link";
+import { useMemo } from "react";
 
 interface AppLayoutProps {
   children: React.ReactNode;
+  title?: ReactNode;
+  description?: ReactNode;
 }
 
-export default function AppLayout({ children }: AppLayoutProps) {
+interface SidebarLinkInterface {
+  link: string;
+  label: ReactNode;
+  links?: SidebarLinkInterface[];
+  active?: boolean;
+}
+
+export default function AppLayout({ children, title, description }: AppLayoutProps) {
   const router = useRouter();
+
+  const isLinkActive = useCallback((link: SidebarLinkInterface["link"]) => link === router.asPath, [])
+
+  const navigation = useMemo(() => ([
+    {
+      link: '/', label: '+', links: [
+        { link: "/authentication/simple", label: "+" },
+        { link: "/authentication/register-with-metadata", label: "+" },
+        { link: "/authentication/save-user-on-login", label: "+" },
+      ]
+    },
+    {
+      link: '/invites', label: '+', links: [
+        { link: "/invites/table", label: "+" },
+        { link: "/invites/pane", label: "+" },
+      ]
+    },
+
+    {
+      link: '/ui', label: '+', links: [
+        { link: "/ui/custom-theme", label: "+" },
+      ]
+    },
+    {
+      link: '/', label: '+', links: [
+        { link: "/notifications/simple", label: "+" },
+        { link: "/notifications/change-default-tab", label: "+" },
+        { link: "/notifications/custom-icons", label: "+" },
+        { link: "/notifications/custom-icons", label: "+" },
+      ]
+    },
+
+  ]).map((item) => ({
+    ...item,
+    active: isLinkActive(item.link)
+  })), [isLinkActive])
+
+  const renderNavigation = (nav: SidebarLinkInterface) => <li><Link href="/">User management</Link></li>
+
   return (
     <>
       <Head>
@@ -25,35 +75,84 @@ export default function AppLayout({ children }: AppLayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <div className={styles.header}>
-          <Link href={"/"}>
+      <div className={styles.app}>
+        <header className={styles.header}>
+          <Link href={"/"} role="presentation" className={styles.brand}>
             <Image
-              className={styles.logo}
-              src="/roq.svg"
+              src="/brand.svg"
               alt="ROQ Logo"
               width={80}
-              height={80}
+              height={40}
               priority
             />
           </Link>
-          <div className={styles.linksContainer}>
-            <Link href={routes.frontend.invites}>Invites</Link>
+          <nav className={styles.globalNavigation}>
+            <ul className={styles.globalNavigationList}>
+              <li><NotificationBell /></li>
+              <li><ChatMessageBell onClick={() => router.push('/chat')} /></li>
+              <li><button className="btn btn-sm" onClick={signOut}>Logout</button></li>
+            </ul>
+          </nav>
+        </header>
 
-            {/* ROQ Notification and Chat bell */}
-            <NotificationBell />
-            <ChatMessageBell
-              onClick={() => router.push(routes.frontend.chat)}
-            />
+        <section className={styles.container}>
+          <aside className={styles.sidebar}>
+            <div className={styles.sidebarContent}>
+              <nav className={styles.sidebarNavigation}>
+                <ul>
 
-            <button onClick={() => signOut()} className="btn btn-sm">
-              Logout
-            </button>
-          </div>
-        </div>
-        <Sidebar />
-        <div className={styles.content}>{children}</div>
-      </main>
+                  <li>
+                    <Link href="/">User management</Link>
+                    <ul>
+                      <li><Link href="/authentication/simple">Simple authentication</Link></li>
+                      <li><Link href="/authentication/register-with-metadata">Register with metadata</Link></li>
+                      <li><Link href="/authentication/register-with-metadata">save-user-on-login</Link></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <Link href="/">invites</Link>
+                    <ul>
+                      <li><Link href="/invites/table">Simple authentication</Link></li>
+                      <li><Link href="/invites/pane">Register with metadata</Link></li>
+                    </ul>
+                  </li>
+                  <li><Link href="/">UI</Link>
+                    <ul>
+                      <li><Link href="/ui/custom-theme">Custom theme</Link></li>
+                    </ul>
+                  </li>
+                  <li><Link href="/">Notifications</Link>
+                    <ul>
+                      <li><Link href="/notifications/simple">Simple notification bell</Link></li>
+                      <li><Link href="/notifications/change-default-tab">Notification show unread tab</Link></li>
+                      <li><Link href="/notifications/custom-icons">Notifications custom icons</Link></li>
+                    </ul>
+                  </li>
+                  <li><Link href="/chat">Chat</Link></li>
+                </ul>
+              </nav>
+            </div>
+          </aside>
+
+          <section className={styles.content}>
+            <main id="main" className={styles.main}>
+              {!!title && (
+                <section className={styles.pageHeader}>
+                  {title && <h2 className={styles.pageTitle}>{title}</h2>}
+                  {description && <p className={styles.pageDescription}>{description}</p>}
+                </section>
+              )}
+
+
+              <div>
+                {children}
+              </div>
+              <div style={{ 'clear': 'both' }}></div>
+            </main>
+            <footer className={styles.footer}></footer>
+          </section>
+        </section>
+      </div >
     </>
   );
 }

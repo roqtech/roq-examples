@@ -9,7 +9,7 @@ const LoginPage = function () {
       <div className={styles.center}>
         <Image
           className={styles.logo}
-          src="/roq.svg"
+          src="/brand-big.svg"
           alt="ROQ Logo"
           width={300}
           height={200}
@@ -36,7 +36,6 @@ const LoginPage = function () {
   );
 };
 
-export default requireNextAuth({
-  redirectIfAuthenticated: true,
-  redirectTo: "/",
-})(LoginPage);
+export default requireNextAuth({ redirectIfAuthenticated: true, redirectTo: "/" })(
+  LoginPage
+);

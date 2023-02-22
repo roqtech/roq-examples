@@ -3,12 +3,17 @@ import Files from "components/file/files";
 import styles from "pages/dashboard/dashboard.module.css";
 import { requireNextAuth } from "@roq/nextjs";
 
-function DashboardPage() {
+function CustomTheme() {
   return (
-    <AppLayout title="Files" description="Recent files from users of this app">
-      <div className={styles.container}>
-        <Files />
-      </div>
+    <AppLayout title="UI" description="Custom Theme">
+      <style>
+        {`
+          :root {
+            --roq-color-primary: red !important;
+            --roq-border-radius: 2px !important;
+          }
+        `}
+      </style>
     </AppLayout>
   );
 }
@@ -16,4 +21,4 @@ function DashboardPage() {
 export default requireNextAuth({
   redirectIfAuthenticated: false,
   redirectTo: "/login",
-})(DashboardPage);
+})(CustomTheme);

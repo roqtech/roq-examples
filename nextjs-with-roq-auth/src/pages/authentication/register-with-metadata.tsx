@@ -3,12 +3,10 @@ import Files from "components/file/files";
 import styles from "pages/dashboard/dashboard.module.css";
 import { requireNextAuth } from "@roq/nextjs";
 
-function DashboardPage() {
+function RegisterWithMetadata() {
   return (
-    <AppLayout title="Files" description="Recent files from users of this app">
-      <div className={styles.container}>
-        <Files />
-      </div>
+    <AppLayout title="Authentication" description="Send meta data while signing in">
+      simple
     </AppLayout>
   );
 }
@@ -16,4 +14,4 @@ function DashboardPage() {
 export default requireNextAuth({
   redirectIfAuthenticated: false,
   redirectTo: "/login",
-})(DashboardPage);
+})(RegisterWithMetadata);
