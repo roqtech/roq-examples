@@ -44,7 +44,6 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                 { link: '/invites/pane', label: '+' },
             ]
         },
-
         {
             link: '/ui', label: '+', links: [
                 { link: '/ui/custom-theme', label: '+' },
@@ -55,6 +54,19 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                 { link: '/notifications/simple', label: '+' },
                 { link: '/notifications/change-default-tab', label: '+' },
                 { link: '/notifications/custom-icons', label: '+' },
+            ]
+        },
+        {
+            link: '/', label: '+', links: [
+                { link: '/chat', label: '+' },
+                { link: '/chat/custom', label: '+' },
+            ]
+        }, {
+
+            link: '/', label: '+', links: [
+                { link: '/files/upload', label: '+' },
+                { link: '/files/controlled-upload', label: '+' },
+                { link: '/files/dropzone', label: '+' },
             ]
         },
 
@@ -148,6 +160,20 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                                             <li><Link href="/notifications/custom-icons">Notifications custom
                                                 icons</Link></li>
                                             <li><Link href="/notifications/welcome-a-user">Welcome a user</Link></li>
+                                        </ul>
+                                    </li>
+                                    <li><Link href="/">Chat</Link>
+                                        <ul>
+                                            <li><Link href="/chat">Default</Link></li>
+                                            <li><Link href="/chat/custom">Custom</Link></li>
+                                        </ul>
+                                    </li>
+                                    <li><Link href="/">Files</Link>
+                                        <ul>
+                                            <li><Link href="/files/upload">File Upload</Link></li>
+                                            <li><Link href="/files/controlled-upload">File Upload (Controlled)</Link>
+                                            </li>
+                                            <li><Link href="/files/dropzone">File Dropzone</Link></li>
                                         </ul>
                                     </li>
                                 </ul>

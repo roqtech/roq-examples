@@ -1,9 +1,8 @@
-import React from 'react';
 import AuthLayout from 'layout/auth/auth.layout';
 import AppLayout from 'layout/app/app.layout';
 import { AuthView } from '../../../views/auth';
 
-export default () => {
+const Login = () => {
     return (
         <AppLayout>
             <AuthLayout>
@@ -13,3 +12,5 @@ export default () => {
     );
 };
 
+
+export default Login;

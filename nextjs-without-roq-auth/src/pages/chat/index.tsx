@@ -1,21 +1,20 @@
 import { Chat } from '@roq/nextjs';
-import { useRouter } from 'next/router';
 import AppLayout from 'layout/app/app.layout';
 
 import { routes } from 'routes';
 import { withAuth } from '../../components/hocs';
 
 function ChatPage() {
-    const router = useRouter();
-
     return (
         <AppLayout>
-            <Chat/>
+            <div style={{ width: '100%', height: '90vh' }}>
+                <Chat fluid={true}/>
+            </div>
         </AppLayout>
     );
 }
 
 export default withAuth({
     redirectIfAuthenticated: false,
-    redirectTo: routes.frontend.login,
+    redirectTo: routes.frontend.authentication.simple,
 })(ChatPage);
