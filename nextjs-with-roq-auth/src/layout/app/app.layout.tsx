@@ -97,6 +97,16 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                       <li><Link className={isRouteActive(routes.frontend.notifications.welcome) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.welcome}>Welcome a user</Link></li>
                     </ul>
                   </li>
+
+                  <li><Link className={isRouteActive(routes.frontend.chat.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.home}>Chat</Link>
+                    <ul>
+                      <li><Link className={isRouteActive(routes.frontend.chat.simple) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.simple}>Simple Chat</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.chat.custom) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.custom}>Controlled Chat</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.chat.messageBell) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.messageBell}>Chat Message Bell</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.chat.customIcon) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.customIcon}>Custom Icon</Link></li>
+                    </ul>
+                  </li>
+
                   <li><Link className={isRouteActive(routes.frontend.chat.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.home}>Chat</Link></li>
                   <li><Link className={isRouteActive(routes.frontend.files.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.home}>Files</Link>
                     <ul>

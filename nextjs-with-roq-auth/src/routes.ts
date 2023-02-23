@@ -24,6 +24,10 @@ export const routes = Object.freeze({
     },
     chat: {
       home: "/chat",
+      simple: "/chat/simple",
+      custom: "/chat/custom",
+      messageBell: "/chat/message-bell",
+      customIcon: "/chat/custom-icon",
     },
     files: {
       home: "/files",

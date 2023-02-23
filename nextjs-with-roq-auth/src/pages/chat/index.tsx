@@ -1,14 +1,3 @@
-import { Chat } from '@roq/nextjs';
-import AppLayout from 'layout/app/app.layout';
+import SimpleChat from "pages/chat/simple";
 
-function ChatPage() {
-  return (
-    <AppLayout>
-      <div style={{ width: '100%', height: '90vh' }}>
-        <Chat fluid={true} />
-      </div>
-    </AppLayout>
-  );
-}
-
-export default ChatPage;
+export default SimpleChat;
