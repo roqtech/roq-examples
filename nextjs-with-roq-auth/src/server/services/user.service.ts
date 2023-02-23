@@ -42,7 +42,7 @@ export class UserService {
   }
 
   static async welcomeUser(userId: string) {
-    roqClient.asSuperAdmin().notify({
+    return roqClient.asSuperAdmin().notify({
       notification: {
         key: NotificationTypes.welcome,
         recipients: { userIds: [userId] },
