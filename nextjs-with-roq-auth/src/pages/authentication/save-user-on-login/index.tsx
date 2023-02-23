@@ -1,15 +1,15 @@
 import AuthLayout from 'layout/auth/auth.layout';
 import AppLayout from 'layout/app/app.layout';
 
-const Login = () => {
+const SaveOnLogin = () => {
   return (
     <AppLayout>
       <AuthLayout>
-        save on login
+        save on save
       </AuthLayout>
     </AppLayout>
   );
 };
 
 
-export default Login;
+export default SaveOnLogin;

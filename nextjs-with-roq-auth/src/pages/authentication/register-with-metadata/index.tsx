@@ -1,7 +1,7 @@
 import AuthLayout from 'layout/auth/auth.layout';
 import AppLayout from 'layout/app/app.layout';
 
-const Login = () => {
+const RegisterWithMetadata = () => {
   return (
     <AppLayout>
       <AuthLayout>
@@ -12,4 +12,4 @@ const Login = () => {
 };
 
 
-export default Login;
+export default RegisterWithMetadata;

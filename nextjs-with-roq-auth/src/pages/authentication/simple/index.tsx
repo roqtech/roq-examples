@@ -3,7 +3,7 @@ import AuthLayout from 'layout/auth/auth.layout';
 import AppLayout from 'layout/app/app.layout';
 import { signIn } from '@roq/nextjs';
 
-export default () => {
+export const SimpleLogin = () => {
   return (
     <AppLayout>
       <AuthLayout>
@@ -13,3 +13,5 @@ export default () => {
   );
 };
 
+
+export default SimpleLogin;

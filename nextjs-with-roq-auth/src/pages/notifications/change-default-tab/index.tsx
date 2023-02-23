@@ -9,7 +9,11 @@ export const NotificationUnreadTab = () => {
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-        <NotificationBell type={"unread"} />
+        {/* TODO that's not flent! */}
+        {/* // @ts-ignore */}
+        <NotificationBell
+        // type={"inread"} 
+        />
       </div>
     </AppLayout>
   )
