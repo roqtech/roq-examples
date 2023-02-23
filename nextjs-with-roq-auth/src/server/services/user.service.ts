@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { NotificationTypes } from "server/enums";
 import { roqClient } from "server/roq";
 import { PrismaClient } from "@prisma/client";
