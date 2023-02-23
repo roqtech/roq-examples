@@ -24,7 +24,7 @@ export const WelcomeNotification = () => {
               <button className="btn btn-sm" onClick={welcomeMe} disabled={isLoading}>Send welcome notification one more time 🎉</button>
             </section>
           </>
-        ) : <p>You have to sing in to execute the action</p>
+        ) : <p>You have to sign in to execute the action</p>
         }
       </div>
     </AppLayout>
