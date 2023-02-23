@@ -33,6 +33,9 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
   {/*
 
   */}
+
+  const isRouteActive = useCallback((route: string) => router.asPath.startsWith(route), [router.asPath])
+
   return (
     <>
       <Head>
@@ -57,7 +60,7 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
               <li><NotificationBell /></li>
               <li><ChatMessageBell onClick={() => router.push('/chat')} /></li>
               {status === 'authenticated' && <li><button className="btn btn-sm" onClick={signOut}>Logout</button></li>}
-              {status === 'unauthenticated' && <li><button className="btn btn-sm" onClick={signIn}>Sign in</button></li>}
+              {/* {status === 'unauthenticated' && <li><button className="btn btn-sm" onClick={signIn}>Sign in</button></li>} */}
             </ul>
           </nav>
         </header>
@@ -67,36 +70,38 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
             <div className={styles.sidebarContent}>
               <nav className={styles.sidebarNavigation}>
                 <ul>
-
                   <li>
-                    <Link href="/">User management</Link>
+                    <Link className={isRouteActive(routes.frontend.authentication.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.home}>User management</Link>
                     <ul>
-                      <li><Link href="/authentication/simple">Simple authentication</Link></li>
-                      <li><Link href="/authentication/register-with-metadata">Register with metadata</Link></li>
-                      <li><Link href="/authentication/register-with-metadata">Save user on login</Link></li>
-                      <li><Link href="/invites/table">Invite users table</Link></li>
-                      <li><Link href="/invites/pane">Invite users with  pane in page</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.authentication.simple) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.simple}>Simple authentication</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.authentication.registerWithMetadata) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.registerWithMetadata}>Register with metadata</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.authentication.saveUserOnLogin) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.saveUserOnLogin}>Save user on login</Link></li>
                     </ul>
                   </li>
-                  <li><Link href="/">UI</Link>
+                  <li><Link className={isRouteActive(routes.frontend.invites.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.invites.home}>Invites</Link>
                     <ul>
-                      <li><Link href="/ui/custom-theme">Custom theme</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.invites.table) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.invites.table}>Invite users table</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.invites.pane) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.invites.pane}>Invite users with  pane in page</Link></li>
                     </ul>
                   </li>
-                  <li><Link href="/">Notifications</Link>
+                  <li><Link className={isRouteActive(routes.frontend.ui.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.ui.home}>UI</Link>
                     <ul>
-                      <li><Link href="/notifications/simple">Simple notification bell</Link></li>
-                      <li><Link href="/notifications/change-default-tab">Notification show unread tab</Link></li>
-                      <li><Link href="/notifications/custom-icons">Notifications custom icons</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.ui.custom) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.ui.custom}>Custom theme</Link></li>
                     </ul>
                   </li>
-                  <li><Link href="/chat">Chat</Link></li>
-                  <li><Link href="/">Files</Link>
+                  <li><Link className={isRouteActive(routes.frontend.notifications.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.home}>Notifications</Link>
                     <ul>
-                      <li><Link href="/files/upload">File Upload</Link></li>
-                      <li><Link href="/files/controlled-upload">File Upload (Controlled)</Link>
-                      </li>
-                      <li><Link href="/files/dropzone">File Dropzone</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.notifications.simple) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.simple}>Simple notification bell</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.notifications.customTab) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.customTab}>Notification show unread tab</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.notifications.customIcons) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.customIcons}>Notifications custom icons</Link></li>
+                    </ul>
+                  </li>
+                  <li><Link className={isRouteActive(routes.frontend.chat.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.home}>Chat</Link></li>
+                  <li><Link className={isRouteActive(routes.frontend.files.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.home}>Files</Link>
+                    <ul>
+                      <li><Link className={isRouteActive(routes.frontend.files.upload) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.upload}>File Upload</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.files.controlledUpload) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.controlledUpload}>File Upload (Controlled)</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.files.dropdzone) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.dropdzone}>File Dropzone</Link></li>
                     </ul>
                   </li>
                 </ul>
@@ -105,19 +110,21 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
           </aside>
 
           <section className={styles.content}>
-            <main id="main" className={styles.main}>
-              {!!title && (
-                <section className={styles.pageHeader}>
-                  {title && <h2 className={styles.pageTitle}>{title}</h2>}
-                  {description && <p className={styles.pageDescription}>{description}</p>}
-                </section>
-              )}
-              <div>
-                {children}
-              </div>
-              <div style={{ 'clear': 'both' }}></div>
-            </main>
-            <footer className={styles.footer}></footer>
+            <div>
+              <main id="main" className={styles.main}>
+                {!!title && (
+                  <section className={styles.pageHeader}>
+                    {title && <h2 className={styles.pageTitle}>{title}</h2>}
+                    {description && <p className={styles.pageDescription}>{description}</p>}
+                  </section>
+                )}
+                <div>
+                  {children}
+                </div>
+                <div style={{ 'clear': 'both' }}></div>
+              </main>
+              <footer className={styles.footer}></footer>
+            </div>
           </section>
         </section>
       </div >

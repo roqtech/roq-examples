@@ -9,6 +9,7 @@ import { UserService } from "server/services/user.service";
 
 export default RoqAuth({
   hooks: {
+    onRegisterSuccess() {},
     // This hook is optional - and can be used to persist user information,
     // or as in the case below, send them a welcome notification
     onLoginSuccess({ session, user }) {

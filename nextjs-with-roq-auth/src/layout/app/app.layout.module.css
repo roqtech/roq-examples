@@ -80,6 +80,11 @@
   color: rgb(var(--primary-color-rgb));
 }
 
+.sidebarNavigation > ul li a.active {
+  color: red !important;
+}
+
+.sidebarNavigationLinkActive,
 .sidebarNavigation > ul li > a:hover,
 .sidebarNavigation > ul li > a:focus {
   background-color: #f4f7ff;
@@ -95,7 +100,6 @@
   flex-grow: 1;
   min-width: 0px;
   margin-left: var(--sidebar-with, 320px);
-  overflow-y: auto;
 }
 
 .main {
