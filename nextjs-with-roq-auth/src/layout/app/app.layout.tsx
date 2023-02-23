@@ -94,6 +94,7 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                       <li><Link className={isRouteActive(routes.frontend.notifications.simple) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.simple}>Simple notification bell</Link></li>
                       <li><Link className={isRouteActive(routes.frontend.notifications.customTab) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.customTab}>Notification show unread tab</Link></li>
                       <li><Link className={isRouteActive(routes.frontend.notifications.customIcons) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.customIcons}>Notifications custom icons</Link></li>
+                      <li><Link className={isRouteActive(routes.frontend.notifications.welcome) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.notifications.welcome}>Welcome a user</Link></li>
                     </ul>
                   </li>
                   <li><Link className={isRouteActive(routes.frontend.chat.home) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.chat.home}>Chat</Link></li>

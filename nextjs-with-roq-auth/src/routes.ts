@@ -20,6 +20,7 @@ export const routes = Object.freeze({
       simple: "/notifications/simple",
       customTab: "/notifications/change-default-tab",
       customIcons: "/notifications/custom-icons",
+      welcome: "/notifications/welcome",
     },
     chat: {
       home: "/chat",
@@ -33,6 +34,6 @@ export const routes = Object.freeze({
   },
   server: {
     files: "/api/files",
-    contact: "/api/contact",
+    welcome: "/api/welcome",
   },
 });
