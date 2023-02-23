@@ -18,7 +18,4 @@ function CustomTheme() {
   );
 }
 
-export default requireNextAuth({
-  redirectIfAuthenticated: false,
-  redirectTo: "/login",
-})(CustomTheme);
+export default CustomTheme;

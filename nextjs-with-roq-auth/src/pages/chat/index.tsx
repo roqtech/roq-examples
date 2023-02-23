@@ -1,22 +1,14 @@
-import { Chat, requireNextAuth } from "@roq/nextjs";
-import { useRouter } from "next/router";
-import AppLayout from "layout/app/app.layout";
-import { routes } from "routes";
-import styles from "pages/chat/chat.module.css";
+import { Chat } from '@roq/nextjs';
+import AppLayout from 'layout/app/app.layout';
 
 function ChatPage() {
-  const router = useRouter();
-
   return (
     <AppLayout>
-      <div className={styles.chatContainer}>
-        <Chat fluid />
+      <div style={{ width: '100%', height: '90vh' }}>
+        <Chat fluid={true} />
       </div>
     </AppLayout>
   );
 }
 
-export default requireNextAuth({
-  redirectIfAuthenticated: false,
-  redirectTo: routes.frontend.login,
-})(ChatPage);
+export default ChatPage;

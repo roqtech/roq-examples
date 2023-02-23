@@ -6,12 +6,13 @@ import { ReactNode, useCallback } from "react";
 import Head from "next/head";
 import styles from "layout/app/app.layout.module.css";
 import Image from "next/image";
-import { NotificationBell, ChatMessageBell, signOut, useSession } from "@roq/nextjs";
+import { NotificationBell, ChatMessageBell, signOut, useSession, signIn } from "@roq/nextjs";
 import { useRouter } from "next/router";
 import { routes } from "routes";
 
 import Link from "next/link";
 import { useMemo } from "react";
+import { sign } from "crypto";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -28,45 +29,10 @@ interface SidebarLinkInterface {
 
 export default function AppLayout({ children, title, description }: AppLayoutProps) {
   const router = useRouter();
+  const { session, status } = useSession();
+  {/*
 
-  const isLinkActive = useCallback((link: SidebarLinkInterface["link"]) => link === router.asPath, [])
-
-  const navigation = useMemo(() => ([
-    {
-      link: '/', label: '+', links: [
-        { link: "/authentication/simple", label: "+" },
-        { link: "/authentication/register-with-metadata", label: "+" },
-        { link: "/authentication/save-user-on-login", label: "+" },
-      ]
-    },
-    {
-      link: '/invites', label: '+', links: [
-        { link: "/invites/table", label: "+" },
-        { link: "/invites/pane", label: "+" },
-      ]
-    },
-
-    {
-      link: '/ui', label: '+', links: [
-        { link: "/ui/custom-theme", label: "+" },
-      ]
-    },
-    {
-      link: '/', label: '+', links: [
-        { link: "/notifications/simple", label: "+" },
-        { link: "/notifications/change-default-tab", label: "+" },
-        { link: "/notifications/custom-icons", label: "+" },
-        { link: "/notifications/custom-icons", label: "+" },
-      ]
-    },
-
-  ]).map((item) => ({
-    ...item,
-    active: isLinkActive(item.link)
-  })), [isLinkActive])
-
-  const renderNavigation = (nav: SidebarLinkInterface) => <li><Link href="/">User management</Link></li>
-
+  */}
   return (
     <>
       <Head>
@@ -90,7 +56,8 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
             <ul className={styles.globalNavigationList}>
               <li><NotificationBell /></li>
               <li><ChatMessageBell onClick={() => router.push('/chat')} /></li>
-              <li><button className="btn btn-sm" onClick={signOut}>Logout</button></li>
+              {status === 'authenticated' && <li><button className="btn btn-sm" onClick={signOut}>Logout</button></li>}
+              {status === 'unauthenticated' && <li><button className="btn btn-sm" onClick={signIn}>Sign in</button></li>}
             </ul>
           </nav>
         </header>
@@ -106,14 +73,9 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                     <ul>
                       <li><Link href="/authentication/simple">Simple authentication</Link></li>
                       <li><Link href="/authentication/register-with-metadata">Register with metadata</Link></li>
-                      <li><Link href="/authentication/register-with-metadata">save-user-on-login</Link></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <Link href="/">invites</Link>
-                    <ul>
-                      <li><Link href="/invites/table">Simple authentication</Link></li>
-                      <li><Link href="/invites/pane">Register with metadata</Link></li>
+                      <li><Link href="/authentication/register-with-metadata">Save user on login</Link></li>
+                      <li><Link href="/invites/table">Invite users table</Link></li>
+                      <li><Link href="/invites/pane">Invite users with  pane in page</Link></li>
                     </ul>
                   </li>
                   <li><Link href="/">UI</Link>
@@ -129,6 +91,14 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                     </ul>
                   </li>
                   <li><Link href="/chat">Chat</Link></li>
+                  <li><Link href="/">Files</Link>
+                    <ul>
+                      <li><Link href="/files/upload">File Upload</Link></li>
+                      <li><Link href="/files/controlled-upload">File Upload (Controlled)</Link>
+                      </li>
+                      <li><Link href="/files/dropzone">File Dropzone</Link></li>
+                    </ul>
+                  </li>
                 </ul>
               </nav>
             </div>
@@ -142,8 +112,6 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                   {description && <p className={styles.pageDescription}>{description}</p>}
                 </section>
               )}
-
-
               <div>
                 {children}
               </div>
