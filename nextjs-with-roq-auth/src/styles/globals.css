@@ -8,6 +8,15 @@
   --foreground-rgb: 0, 0, 0;
   --primary-color-rgb: 32, 123, 229;
   --light-grey-rgb: 201, 197, 211;
+
+  --sidebar-width: 312px;
+  --sidebar-padding: 20px 14px;
+  --sidebar-background-color: #f7f9fc;
+  --sidebar-border-color: #d8dde8;
+
+  --sidebar-active-color: rgb(59, 130, 246);
+
+  --content-background-color: #ffffff;
 }
 
 *,

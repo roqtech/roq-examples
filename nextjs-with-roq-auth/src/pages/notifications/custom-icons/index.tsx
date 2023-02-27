@@ -1,5 +1,6 @@
 import AppLayout from 'layout/app/app.layout';
 import { NotificationBell } from '@roq/nextjs';
+import DemoLayout from 'layout/demo/demo.layout';
 
 export const BellIcon = () => {
   return (
@@ -11,13 +12,11 @@ export const BellIcon = () => {
 export const CustomNotificationIcon = () => {
   return (
     <AppLayout>
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        <NotificationBell icon={<BellIcon />} />
-      </div>
+      <DemoLayout>
+        <div style={{ height: '700px', width: '200px', display: 'flex', justifyContent: 'end' }}>
+          <NotificationBell icon={<BellIcon />} />
+        </div>
+      </DemoLayout>
     </AppLayout>
   )
 }

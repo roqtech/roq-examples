@@ -1,5 +1,6 @@
 import { ChatSidebar, ChatWindow } from '@roq/nextjs';
 import AppLayout from 'layout/app/app.layout';
+import DemoLayout from 'layout/demo/demo.layout';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 
@@ -22,21 +23,22 @@ function ControlledChatPafge() {
 
   return (
     <AppLayout>
-      <div style={{
-        height: '60vh',
-        width: '80%',
-        display: "flex",
-        gap: 12,
-        flexDirection: "row",
-      }}>
-        <ChatSidebar
-          onCurrentConversationIdChanged={navigateToConversationRoute} generateConversationLink={generateConversationLink}
-          style={{
-            width: '400px'
-          }}
-        />
-        <ChatWindow conversationId={router.query.cid as string} />
-      </div>
+      <DemoLayout>
+        <div style={{
+          height: '60vh',
+          display: "flex",
+          gap: 12,
+          flexDirection: "row",
+        }}>
+          <ChatSidebar
+            onCurrentConversationIdChanged={navigateToConversationRoute} generateConversationLink={generateConversationLink}
+            style={{
+              width: '400px'
+            }}
+          />
+          <ChatWindow conversationId={router.query.cid as string} />
+        </div>
+      </DemoLayout>
     </AppLayout >
   );
 }

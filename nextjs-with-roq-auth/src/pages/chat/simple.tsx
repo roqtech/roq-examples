@@ -1,12 +1,15 @@
 import { Chat } from '@roq/nextjs';
 import AppLayout from 'layout/app/app.layout';
+import DemoLayout from 'layout/demo/demo.layout';
 
 function ChatPage() {
   return (
     <AppLayout>
-      <div style={{ width: '100%', height: '90vh' }}>
-        <Chat fluid={true} />
-      </div>
+      <DemoLayout>
+        <div style={{ flex: 1, height: '90vh' }}>
+          <Chat fluid={true} />
+        </div>
+      </DemoLayout>
     </AppLayout>
   );
 }

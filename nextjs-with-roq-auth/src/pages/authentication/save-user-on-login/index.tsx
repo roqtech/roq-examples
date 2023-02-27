@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import AuthLayout from 'layout/auth/auth.layout';
 import AppLayout from 'layout/app/app.layout';
 import { login } from 'utils/login.util'
+import DemoLayout from 'layout/demo/demo.layout';
 
 const SaveOnLogin = () => {
 
@@ -11,9 +12,11 @@ const SaveOnLogin = () => {
 
   return (
     <AppLayout>
-      <AuthLayout>
-        <button className="btn btn-sm" onClick={handleLogin}>Sign in with ROQ and store in db</button>
-      </AuthLayout>
+      <DemoLayout requireSesion={false}>
+        <AuthLayout>
+          <button className="btn btn-sm" onClick={handleLogin}>Sign in with ROQ and store in db</button>
+        </AuthLayout>
+      </DemoLayout>
     </AppLayout>
   );
 };
