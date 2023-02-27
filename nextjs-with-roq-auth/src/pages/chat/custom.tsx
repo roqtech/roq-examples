@@ -1,11 +1,10 @@
-import { useCallback } from 'react'
-import { ChatSidebar, ChatWindow, requireNextAuth } from "@roq/nextjs";
-import { useRouter } from "next/router";
-import AppLayout from "layout/app/app.layout";
-import { routes } from "routes";
-import styles from "pages/chat/chat.module.css";
+import { ChatSidebar, ChatWindow } from '@roq/nextjs';
+import AppLayout from 'layout/app/app.layout';
+import DemoLayout from 'layout/demo/demo.layout';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
 
-function ChatPage() {
+function ControlledChatPafge() {
   const router = useRouter();
 
   const navigateToConversationRoute = useCallback((cid: string | null) => {
@@ -24,18 +23,24 @@ function ChatPage() {
 
   return (
     <AppLayout>
-      <section className={styles.customChat}>
-        <ChatSidebar
-          onCurrentConversationIdChanged={navigateToConversationRoute} generateConversationLink={generateConversationLink}
-          className={styles.sidebar}
-        />
-        <ChatWindow conversationId={router.query.cid as string} />
-      </section>
-    </AppLayout>
+      <DemoLayout>
+        <div style={{
+          height: '60vh',
+          display: "flex",
+          gap: 12,
+          flexDirection: "row",
+        }}>
+          <ChatSidebar
+            onCurrentConversationIdChanged={navigateToConversationRoute} generateConversationLink={generateConversationLink}
+            style={{
+              width: '400px'
+            }}
+          />
+          <ChatWindow conversationId={router.query.cid as string} />
+        </div>
+      </DemoLayout>
+    </AppLayout >
   );
 }
 
-export default requireNextAuth({
-  redirectIfAuthenticated: false,
-  redirectTo: routes.frontend.login,
-})(ChatPage);
+export default ControlledChatPafge;
