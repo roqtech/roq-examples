@@ -21,6 +21,7 @@
 
 .sidebar {
   display: flex;
+  gap: 12px;
   flex-direction: column;
   position: fixed;
   flex: 1 1 0%;
@@ -62,7 +63,7 @@
 }
 
 .sidebarNavigation {
-  padding: 24px 0px;
+  padding: 0px 0px;
 }
 
 .sidebarNavigation > ul {
