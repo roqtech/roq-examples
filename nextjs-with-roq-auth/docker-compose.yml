@@ -11,4 +11,4 @@ services:
       PGUSER: roqdev
       PGDATABASE: roqdev
     ports:
-      - "5436:5432"
+      - "5441:5432"

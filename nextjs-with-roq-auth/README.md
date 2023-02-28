@@ -1,38 +1,38 @@
-## ROQ SaaS template with Next.js, Prisma
+### NextJS With ROQ auth example
 
-This is a [ROQ](https://roq.tech) project showcasing how to use ROQ UI widgets and backend APIs with a combination of these technologies
+Running the Project Locally
 
-- [ROQ Next.js](https://www.npmjs.com/package/@roq/nextjs) - a fullstack package for using ROQ UI, and backend SDKs with Next.js
-- [ROQ React Components](https://www.npmjs.com/package/@roq/ui-react) (bundled into @roq/nextjs)
-- [ROQ Node.js SDK](https://www.npmjs.com/package/@roq/nodejs) (bundled into @roq/nextjs)
-- [Next.js](https://nextjs.org), bootstrapped with `create-next-app
+To run the project locally, follow the steps below.
 
-## Get started
+##### Install Dependencies
 
-Step 1 - Setup your ROQ environment variables. Check the example .env.example file
-You can get the environment variables from the [ROQ Console](https://console.roq.tech)
+To install the project's dependencies, run the following command in your terminal:
+`npm i`
 
-```bash
-cp .env.example .env
-# Get the variables from the ROQ console, and replace the values
-```
+This command installs the required packages and their dependencies defined in the package.json file.
 
-Step 2 - You can then install, and start up your application
+##### Run the Database
 
-```bash
-# With Yarn
-yarn
-yarn dev
+To run the project's database, you can use Docker Compose. Docker Compose allows you to define and run multi-container Docker applications.
 
-or
+Run the following command in your terminal to start the database:
 
-# With npm
-npm install
-npm run dev
-```
+`docker compose up`
 
-Your app should be running at [http://localhost:3000](http://localhost:3000) by default.
+This command starts the database and any other services defined in the docker-compose.yml file. Make sure that you have Docker installed on your machine before running this command.
 
-## Further documentation
+#### Generate Prisma Client
 
-To learn more about ROQ UI components and APIs, take a look at [ROQ Documentation](https://docs.roq.tech)
+Prisma is an open-source database toolkit that provides a type-safe database client. The Prisma client is used to perform CRUD operations on the database.
+
+To generate the Prisma client, run the following command in your terminal:
+
+`npx prisma generate`
+
+This command generates a Prisma client in the node_modules/.prisma/client directory. Make sure that you have the Prisma CLI installed globally before running this command.
+
+### Run database schema migrations
+
+Run the migrations with your local DB (check the env `DATABASE_URL` value):
+
+`npx prisma migrate deploy`

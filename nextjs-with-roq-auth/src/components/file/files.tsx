@@ -26,8 +26,6 @@ export default function Files() {
 
   return (
     <div className={styles.feed}>
-      <h2 className={styles.title}>Recent files from users of this app</h2>
-
       <div className={styles.uploadContainer}>
         <Card>
           <UploadFile onSuccess={handleCreateSuccess} onDelete={handleDelete} />
