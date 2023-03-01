@@ -15,7 +15,12 @@ interface Credentials {
     password: string;
 }
 
-export function AuthForm({ type }: { type: 'signIn' | 'signUp' }) {
+export interface AuthFormPropsInterface {
+    type: 'signIn' | 'signUp',
+    metaData?: Record<string, unknown>
+}
+
+export function AuthForm({ type, metaData }: AuthFormPropsInterface) {
     const [signInCredentials, setSignInCredentials] = useState<Credentials>({
         email: '',
         password: '',
@@ -61,7 +66,8 @@ export function AuthForm({ type }: { type: 'signIn' | 'signUp' }) {
             email: signUpCredentials.email,
             password: signUpCredentials.password,
             name: signUpCredentials.name,
-        });
+            ...(metaData ? { metadata: JSON.stringify(metaData) } : {}),
+        }, 'signUp=true');
     };
 
     return (

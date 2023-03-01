@@ -1,16 +1,17 @@
-
+import { Chat } from '@roq/nextjs';
 import AppLayout from 'layout/app/app.layout';
-import Files from '../../../components/file/files';
 import DemoLayout from 'layout/demo/demo.layout';
 
-export const FileUpload = () => {
+function ChatPage() {
   return (
     <AppLayout>
       <DemoLayout>
-        <Files />
+        <div style={{ flex: 1, height: '90vh' }}>
+          <Chat fluid={true} />
+        </div>
       </DemoLayout>
     </AppLayout>
-  )
+  );
 }
 
-export default FileUpload;
+export default ChatPage;

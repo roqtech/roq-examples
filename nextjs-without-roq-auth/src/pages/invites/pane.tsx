@@ -1,17 +1,19 @@
-import { UserInvitePane } from '@roq/nextjs';
-import { withAuth } from 'components/hocs';
 import AppLayout from 'layout/app/app.layout';
-import { routes } from '../../routes';
+import DemoLayout from 'layout/demo/demo.layout';
+import dynamic from 'next/dynamic';
+
+const UserInvitePane = dynamic(async () => (await import('@roq/nextjs')).UserInvitePane, { ssr: false })
 
 export const InvitePane = () => {
-    return (
-        <AppLayout>
-            <UserInvitePane/>
-        </AppLayout>
-    )
+  return (
+    <AppLayout>
+      <DemoLayout>
+        <div style={{ minWidth: 560 }}>
+          <UserInvitePane />
+        </div>
+      </DemoLayout>
+    </AppLayout>
+  )
 }
 
-export default withAuth({
-    redirectIfAuthenticated: false,
-    redirectTo: routes.frontend.authentication.simple,
-})(InvitePane)
+export default InvitePane;

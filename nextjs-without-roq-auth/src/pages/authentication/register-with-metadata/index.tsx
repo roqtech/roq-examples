@@ -1,16 +1,20 @@
 import AuthLayout from 'layout/auth/auth.layout';
 import AppLayout from 'layout/app/app.layout';
+import DemoLayout from 'layout/demo/demo.layout';
+import React from 'react';
 import { AuthView } from '../../../views/auth';
 
-const Login = () => {
+const RegisterWithMetadata = () => {
     return (
         <AppLayout>
-            <AuthLayout>
-                <AuthView/>
-            </AuthLayout>
+            <DemoLayout requireSession={false}>
+                <AuthLayout>
+                    <AuthView metaData={{ type: 'buyer' }}/>
+                </AuthLayout>
+            </DemoLayout>
         </AppLayout>
     );
 };
 
 
-export default Login;
+export default RegisterWithMetadata;

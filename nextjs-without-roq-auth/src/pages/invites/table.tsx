@@ -1,18 +1,18 @@
+import dynamic from 'next/dynamic';
 import AppLayout from '../../layout/app/app.layout';
-import { UserInvitesTable } from '@roq/nextjs';
-import { withAuth } from 'components/hocs';
-import { routes } from '../../routes';
+import DemoLayout from 'layout/demo/demo.layout';
+
+const UserInvitesTable = dynamic(async () => (await import('@roq/nextjs')).UserInvitesTable, { ssr: false })
 
 export const InviteTable = () => {
-    return (
-        <AppLayout>
-            <UserInvitesTable/>
-        </AppLayout>
-    );
+  return (
+    <AppLayout>
+      <DemoLayout>
+        <UserInvitesTable />
+      </DemoLayout>
+    </AppLayout>
+  );
 }
 
 
-export default withAuth({
-    redirectIfAuthenticated: false,
-    redirectTo: routes.frontend.authentication.simple,
-})(InviteTable)
+export default InviteTable;

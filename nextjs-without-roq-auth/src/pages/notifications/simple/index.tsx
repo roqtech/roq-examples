@@ -1,23 +1,17 @@
-import AppLayout from '../../../layout/app/app.layout';
-import { withAuth } from '../../../components/hocs';
-import { routes } from '../../../routes';
+import AppLayout from 'layout/app/app.layout';
 import { NotificationBell } from '@roq/nextjs';
+import DemoLayout from 'layout/demo/demo.layout';
 
 export const NotificationSimple = () => {
-    return (
-        <AppLayout>
-            <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <NotificationBell/>
-            </div>
-        </AppLayout>
-    )
+  return (
+    <AppLayout>
+      <DemoLayout>
+        <div style={{ height: '700px', width: '200px', display: 'flex', justifyContent: 'end' }}>
+          <NotificationBell />
+        </div>
+      </DemoLayout>
+    </AppLayout >
+  )
 }
 
-export default withAuth({
-    redirectIfAuthenticated: false,
-    redirectTo: routes.frontend.authentication.simple,
-})(NotificationSimple)
+export default NotificationSimple;

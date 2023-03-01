@@ -1,10 +1,10 @@
 import styles from 'views/auth/auth.module.css';
 import Image from 'next/image';
 import { signOut, useSession } from 'next-auth/react';
-import { AuthForm } from '../../components/auth-form';
+import { AuthForm, AuthFormPropsInterface } from '../../components/auth-form';
 import React, { useMemo, useState } from 'react';
 
-export const AuthView = () => {
+export const AuthView = (props: Omit<AuthFormPropsInterface,'type'>) => {
     const [formType, setFormType] = useState<'signUp' | 'signIn'>();
     const { status } = useSession();
     const isAuthenticated = useMemo(() => status === 'authenticated', [status]);
@@ -13,7 +13,7 @@ export const AuthView = () => {
             <div className={styles.center}>
                 <Image
                     className={styles.logo}
-                    src="/roq.svg"
+                    src="/brand-big.svg"
                     alt="ROQ Logo"
                     width={300}
                     height={200}
@@ -44,7 +44,7 @@ export const AuthView = () => {
                             {
                                 formType && (
                                     <>
-                                        <AuthForm type={formType}/>
+                                        <AuthForm {...props} type={formType}/>
                                         <div className={styles.back} onClick={() => setFormType(undefined)}>
                                             <a href="#">Back</a>
                                         </div>

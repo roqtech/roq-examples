@@ -1,18 +1,12 @@
 import NextAuth from 'next-auth'
-import { Platform } from '@roq/nextjs';
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
-import * as process from 'process';
+import { UserService } from 'server/services/user.service';
 import { routes } from '../../../routes';
 
 const prisma = new PrismaClient();
-const platform = new Platform({
-    host: process.env.ROQ_PLATFORM_URL,
-    apiKey: process.env.ROQ_API_KEY,
-    environmentId: process.env.ROQ_ENVIRONMENT_ID
-});
 export default NextAuth({
     session: {
         strategy: 'jwt',
@@ -56,25 +50,29 @@ export default NextAuth({
                         data: {
                             email,
                             password: await hash(password, 12),
-                            roqUserId: email                                                                                                                                                                                                                                                                                                                                                                                                                                     ,
+                            roqUserId: email,
                             name,
                         },
                     })
-                        const roqUser = await platform.asSuperAdmin().createUser({
-                            user: {
-                                email,
-                                firstName,
-                                lastName,
-                                isOptedIn: true,
-                                active: true,
-                                locale: 'en-US',
-                                reference: userCreate.id,
-                            }
-                        });
-                        await prisma.user.update({
-                            where: { id: userCreate.id },
-                            data: { roqUserId: roqUser?.createUser?.id }
-                        });
+                    const roqUser = await UserService.registerAsUser({
+                        email,
+                        firstName,
+                        lastName,
+                        reference: userCreate.id,
+                    });
+                    let type;
+                    if (metaData) {
+                        const metaObj = JSON.parse(metaData);
+                        await UserService.addMetaData(roqUser.id, metaObj);
+                        type = metaObj?.type;
+                    }
+                    await prisma.user.update({
+                        where: { id: userCreate.id },
+                        data: {
+                            roqUserId: roqUser?.id,
+                        }
+                    });
+
                     return {
                         id: userCreate.id,
                         email
@@ -93,15 +91,13 @@ export default NextAuth({
     ],
     callbacks: {
         async session({ session }) {
-            const rightNow = new Date();
-            const expires = new Date(session.expires);
-            const expiry = Math.abs((expires.getTime() - rightNow.getTime()) / 1000);
             const { roqUserId } = await prisma.user.findUnique({ where: { email: session.user.email } });
             return {
                 ...session,
                 user: {
                     ...session.user,
-                    roqToken: await platform.authorization.createUserToken(roqUserId, `${expiry}s`),
+                    roqUserId,
+                    roqToken: await UserService.createToken(roqUserId, session.expires),
                 }
             }
         }
