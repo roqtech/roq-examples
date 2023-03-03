@@ -62,12 +62,14 @@ export function AuthForm({ type, metaData }: AuthFormPropsInterface) {
 
     const handleSignUpSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await signIn('credentials', {
+        const signUpPayload = {
             email: signUpCredentials.email,
             password: signUpCredentials.password,
             name: signUpCredentials.name,
-            ...(metaData ? { metadata: JSON.stringify(metaData) } : {}),
-        }, 'signUp=true');
+            ...(metaData ? { metaData: JSON.stringify(metaData) } : {}),
+        };
+        console.log({ signUpPayload })
+        await signIn('credentials', signUpPayload, 'signUp=true');
     };
 
     return (

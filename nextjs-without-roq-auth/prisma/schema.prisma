@@ -14,6 +14,7 @@ model User {
   id        String   @id @default(uuid())
   roqUserId String   @unique
   name      String
+  type      String
   email     String   @unique
   password  String
   createdAt DateTime @default(now())
@@ -22,8 +23,8 @@ model User {
 
 model File {
   id        String   @id @default(uuid())
-  userId    String   
-  roqFileId String   
+  userId    String
+  roqFileId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   @@unique([userId, roqFileId], name: "uniqueFile")

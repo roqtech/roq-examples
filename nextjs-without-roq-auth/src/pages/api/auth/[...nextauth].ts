@@ -1,16 +1,22 @@
-import NextAuth from 'next-auth'
+import NextAuth, { AuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
 import { compare, hash } from 'bcrypt';
 import { UserService } from 'server/services/user.service';
 import { routes } from '../../../routes';
+import { serverConfig } from 'config';
 
 const prisma = new PrismaClient();
-export default NextAuth({
+
+export const authOptions: AuthOptions = {
+    secret: serverConfig.auth.secret,
     session: {
         strategy: 'jwt',
-        maxAge: 30 * 24 * 60 * 60,
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+    },
+    jwt: {
+        maxAge: 30 * 24 * 60 * 60, // 30 days
     },
     adapter: PrismaAdapter(prisma),
     providers: [
@@ -39,12 +45,14 @@ export default NextAuth({
                 },
                 password: { label: 'Password', type: 'password' }
             },
-            async authorize(credentials) {
+            async authorize(credentials, { query }) {
                 const { email, password, name, metaData } = credentials;
                 const user = await prisma.user.findUnique({
                     where: { email }
                 })
-                if (!user && name) {
+                if (!user && query.signUp === 'true') {
+                    const metaObj = JSON.parse(metaData || '{}');
+                    const type = metaObj?.type || 'user';
                     const [firstName, lastName] = name.split(' ');
                     const userCreate = await prisma.user.create({
                         data: {
@@ -52,6 +60,7 @@ export default NextAuth({
                             password: await hash(password, 12),
                             roqUserId: email,
                             name,
+                            type,
                         },
                     })
                     const roqUser = await UserService.registerAsUser({
@@ -60,19 +69,14 @@ export default NextAuth({
                         lastName,
                         reference: userCreate.id,
                     });
-                    let type;
-                    if (metaData) {
-                        const metaObj = JSON.parse(metaData);
-                        await UserService.addMetaData(roqUser.id, metaObj);
-                        type = metaObj?.type;
-                    }
                     await prisma.user.update({
                         where: { id: userCreate.id },
                         data: {
                             roqUserId: roqUser?.id,
                         }
                     });
-
+                    await UserService.addMetaData(roqUser.id, { type });
+                    await UserService.welcomeUser(roqUser.id);
                     return {
                         id: userCreate.id,
                         email
@@ -113,5 +117,6 @@ export default NextAuth({
         signIn: routes.frontend.authentication.simple,
         signOut: routes.frontend.authentication.simple,
         error: routes.frontend.authentication.simple
-    }
-});
+    },
+};
+export default NextAuth(authOptions);

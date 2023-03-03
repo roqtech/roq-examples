@@ -6,13 +6,11 @@ export const NotificationUnreadTab = () => {
   return (
     <AppLayout>
       <DemoLayout>
-        <div style={{ height: '700px', width: '200px', display: 'flex', justifyContent: 'end' }}>
-          {/* TODO that's not flent! */}
-          {/* // @ts-ignore */}
-          <NotificationBell
-          // type={"inread"} 
-          />
-        </div>
+          <div style={{ height: '700px', width: '200px', display: 'flex', justifyContent: 'end' }}>
+              <NotificationBell
+                  type={'unread' as any}
+              />
+          </div>
       </DemoLayout>
     </AppLayout>
   )

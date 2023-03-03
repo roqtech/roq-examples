@@ -1,1 +1,1 @@
-export { withAuth } from 'server/middlewares/with-auth';
+export { withAuth as default } from 'server/middlewares/with-auth';
