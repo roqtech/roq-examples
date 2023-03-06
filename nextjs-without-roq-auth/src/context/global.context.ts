@@ -12,7 +12,7 @@ export enum ActionTypeEnum {
 
 export interface GlobalContextInterface {
     state: ContextState,
-    dispatch: Dispatch<{ type: ActionTypeEnum }>,
+    dispatch: Dispatch<{ type: ActionTypeEnum, payload?: Partial<ContextState> }>,
 }
 
 export const GlobalContext = createContext<GlobalContextInterface>({

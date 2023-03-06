@@ -3,17 +3,21 @@ import { PropsWithChildren, useReducer } from 'react';
 import { roqThemeLight } from '../styles/roq-theme';
 import { GlobalContextInterface } from '../context/global.context';
 
+interface ActionInterface {
+    type: ActionTypeEnum,
+    payload?: Partial<GlobalContextInterface['state']>
+}
 
-function globalStateReducer(state: GlobalContextInterface['state'], action: { type: ActionTypeEnum }) {
-    switch (action.type) {
+function globalStateReducer(state: GlobalContextInterface['state'], { type, payload }: ActionInterface) {
+    switch (type) {
         case ActionTypeEnum.SET_CUSTOM_THEME: {
-            return { theme: roqThemeLight }
+            return { ...state, theme: payload?.theme ? payload.theme : roqThemeLight }
         }
         case ActionTypeEnum.UN_SET_CUSTOM_THEME: {
-            return { theme: undefined }
+            return { ...state, theme: undefined }
         }
         default: {
-            throw new Error(`Unhandled action type: ${action.type}`)
+            throw new Error(`Unhandled action type: ${type}`)
         }
     }
 }

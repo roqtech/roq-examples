@@ -65,20 +65,22 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                       </ul>
                     </li>
                     <li>
+                      <span>UI</span>
+                      <ul>
+                        <li><Link
+                            className={isRouteActive(routes.frontend.ui.custom) ? styles.sidebarNavigationLinkActive : ''}
+                            href={routes.frontend.ui.custom}>Custom theme</Link></li>
+                      </ul>
+                    </li>
+                    <li>
                       <span>Invites</span>
                       <ul>
                         <li><Link
                             className={isRouteActive(routes.frontend.invites.table) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.invites.table}>Invite users table</Link></li>
                         <li><Link
-                            className={isRouteActive(routes.frontend.invites.customTable) ? styles.sidebarNavigationLinkActive : ''}
-                            href={routes.frontend.invites.customTable}>Invite users table (Custom Theme)</Link></li>
-                        <li><Link
                             className={isRouteActive(routes.frontend.invites.pane) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.invites.pane}>Invite users with pane</Link></li>
-                        <li><Link
-                            className={isRouteActive(routes.frontend.invites.customPane) ? styles.sidebarNavigationLinkActive : ''}
-                            href={routes.frontend.invites.customPane}>Invite users with pane (Custom Theme)</Link></li>
                       </ul>
                     </li>
                     <li>
@@ -93,9 +95,6 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                         <li><Link
                             className={isRouteActive(routes.frontend.notifications.customIcons) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.notifications.customIcons}>Notifications custom icons</Link></li>
-                        <li><Link
-                            className={isRouteActive(routes.frontend.notifications.custom) ? styles.sidebarNavigationLinkActive : ''}
-                            href={routes.frontend.notifications.custom}>Notification (Custom Theme)</Link></li>
                         <li><Link
                             className={isRouteActive(routes.frontend.notifications.welcome) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.notifications.welcome}>Welcome a user</Link></li>
@@ -116,9 +115,6 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                         <li><Link
                             className={isRouteActive(routes.frontend.chat.customIcon) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.chat.customIcon}>Custom Icon</Link></li>
-                        <li><Link
-                            className={isRouteActive(routes.frontend.chat.custom) ? styles.sidebarNavigationLinkActive : ''}
-                            href={routes.frontend.chat.custom}>Chat (Custom Theme)</Link></li>
                       </ul>
                     </li>
                     <li>
@@ -131,14 +127,8 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                             className={isRouteActive(routes.frontend.files.controlledUpload) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.files.controlledUpload}>File Upload (Controlled)</Link></li>
                         <li><Link
-                            className={isRouteActive(routes.frontend.files.customUpload) ? styles.sidebarNavigationLinkActive : ''}
-                            href={routes.frontend.files.customUpload}>File Upload (Custom Theme)</Link></li>
-                        <li><Link
                             className={isRouteActive(routes.frontend.files.dropzone) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.files.dropzone}>File Dropzone</Link></li>
-                        <li><Link
-                            className={isRouteActive(routes.frontend.files.customDropzone) ? styles.sidebarNavigationLinkActive : ''}
-                            href={routes.frontend.files.customDropzone}>File Dropzone (Custom Theme)</Link></li>
                       </ul>
                     </li>
                   </ul>

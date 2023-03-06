@@ -9,8 +9,6 @@ export const routes = Object.freeze({
       home: '/invites',
       table: '/invites/table',
       pane: '/invites/pane',
-      customTable: '/invites/custom-table',
-      customPane: '/invites/custom-pane',
     },
     notifications: {
       home: "/notifications",
@@ -18,23 +16,23 @@ export const routes = Object.freeze({
       customTab: "/notifications/change-default-tab",
       customIcons: "/notifications/custom-icons",
       welcome: "/notifications/welcome",
-      custom: '/notifications/custom-notifications'
     },
     chat: {
       home: "/chat",
       simple: "/chat/simple",
-      custom: "/chat/custom-chat",
-      controlled: "/chat/custom",
-      messageBell: "/chat/message-bell",
-      customIcon: "/chat/custom-icon",
+      controlled: '/chat/custom',
+      messageBell: '/chat/message-bell',
+      customIcon: '/chat/custom-icon',
     },
     files: {
       home: '/files',
       upload: '/files/upload',
-      customUpload: '/files/custom-upload',
       controlledUpload: '/files/controlled-upload',
       dropzone: '/files/dropzone',
-      customDropzone: '/files/custom-dropzone',
+    },
+    ui: {
+      home: '/ui',
+      custom: '/ui/custom-theme',
     },
   },
   server: {
