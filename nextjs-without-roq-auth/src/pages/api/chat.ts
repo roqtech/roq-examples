@@ -1,18 +1,17 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { withAuth } from "server/middlewares";
-import { roqClient } from "server/roq";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { roqClient } from 'server/roq';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "GET") {
-    res.status(405).send({ message: "Method not allowed" });
+  if (req.method !== 'GET') {
+    res.status(405).send({ message: 'Method not allowed' });
     res.end();
   }
 
   try {
     const data = await roqClient.asSuperAdmin().createConversation({
       conversation: {
-        title: "Group party",
-        ownerId: "6332dce5-5a19-4af9-8f28-7dec1e9d461b",
+        title: 'Group party',
+        ownerId: '6332dce5-5a19-4af9-8f28-7dec1e9d461b',
         isGroup: true,
         memberIds: [
           "6332dce5-5a19-4af9-8f28-7dec1e9d461b",
@@ -29,5 +28,5 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 export default function welcomeUser(req: NextApiRequest, res: NextApiResponse) {
-  return withAuth(req, res)(handler);
+  return handler(req, res);
 }

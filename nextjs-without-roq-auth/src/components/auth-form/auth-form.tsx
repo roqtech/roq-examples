@@ -68,7 +68,6 @@ export function AuthForm({ type, metaData }: AuthFormPropsInterface) {
             name: signUpCredentials.name,
             ...(metaData ? { metaData: JSON.stringify(metaData) } : {}),
         };
-        console.log({ signUpPayload })
         await signIn('credentials', signUpPayload, 'signUp=true');
     };
 

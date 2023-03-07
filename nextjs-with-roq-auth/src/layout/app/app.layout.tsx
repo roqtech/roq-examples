@@ -1,12 +1,12 @@
-import { ReactNode, useCallback } from "react";
-import Head from "next/head";
-import styles from "layout/app/app.layout.module.css";
-import Image from "next/image";
-import { signOut, useSession } from "@roq/nextjs";
-import { useRouter } from "next/router";
-import { routes } from "routes";
+import { ReactNode, useCallback } from 'react';
+import Head from 'next/head';
+import styles from 'layout/app/app.layout.module.css';
+import Image from 'next/image';
+import { signOut, useSession } from '@roq/nextjs';
+import { useRouter } from 'next/router';
+import { routes } from 'routes';
 
-import Link from "next/link";
+import Link from 'next/link';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -58,22 +58,34 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                   <li>
                     <span>User management</span>
                     <ul>
-                      <li><Link className={isRouteActive(routes.frontend.authentication.simple) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.simple}>Simple authentication</Link></li>
-                      <li><Link className={isRouteActive(routes.frontend.authentication.registerWithMetadata) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.registerWithMetadata}>Register with metadata</Link></li>
-                      <li><Link className={isRouteActive(routes.frontend.authentication.saveUserOnLogin) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.authentication.saveUserOnLogin}>Save user on login</Link></li>
-                    </ul>
-                  </li>
-                  <li>
-                    <span>Invites</span>
-                    <ul>
-                      <li><Link className={isRouteActive(routes.frontend.invites.table) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.invites.table}>Invite users table</Link></li>
-                      <li><Link className={isRouteActive(routes.frontend.invites.pane) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.invites.pane}>Invite users with  pane in page</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.authentication.simple) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.authentication.simple}>Simple authentication</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.authentication.registerWithMetadata) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.authentication.registerWithMetadata}>Register with metadata</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.authentication.saveUserOnLogin) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.authentication.saveUserOnLogin}>Save user on login</Link></li>
                     </ul>
                   </li>
                   <li>
                     <span>UI</span>
                     <ul>
-                      <li><Link className={isRouteActive(routes.frontend.ui.custom) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.ui.custom}>Custom theme</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.ui.custom) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.ui.custom}>Custom theme</Link></li>
+                    </ul>
+                  </li>
+                  <li>
+                    <span>Invites</span>
+                    <ul>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.invites.table) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.invites.table}>Invite users table</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.invites.pane) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.invites.pane}>Invite users with pane in page</Link></li>
                     </ul>
                   </li>
                   <li>
@@ -97,9 +109,18 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                   <li>
                     <span>Files</span>
                     <ul>
-                      <li><Link className={isRouteActive(routes.frontend.files.upload) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.upload}>File Upload</Link></li>
-                      <li><Link className={isRouteActive(routes.frontend.files.controlledUpload) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.controlledUpload}>File Upload (Controlled)</Link></li>
-                      <li><Link className={isRouteActive(routes.frontend.files.dropdzone) ? styles.sidebarNavigationLinkActive : ''} href={routes.frontend.files.dropdzone}>File Dropzone</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.files.upload) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.files.upload}>File Upload</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.files.controlledUpload) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.files.controlledUpload}>File Upload (Controlled)</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.files.dropdzone) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.files.dropdzone}>File Dropzone</Link></li>
+                      <li><Link
+                          className={isRouteActive(routes.frontend.files.serverSide) ? styles.sidebarNavigationLinkActive : ''}
+                          href={routes.frontend.files.serverSide}>Server Side File Upload</Link></li>
                     </ul>
                   </li>
                 </ul>

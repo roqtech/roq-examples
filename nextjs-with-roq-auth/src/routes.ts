@@ -34,10 +34,12 @@ export const routes = Object.freeze({
       upload: "/files/upload",
       controlledUpload: "/files/controlled-upload",
       dropdzone: "/files/dropzone",
+      serverSide: '/files/server-side',
     },
   },
   server: {
-    files: "/api/files",
-    welcome: "/api/welcome",
+    files: '/api/files',
+    welcome: '/api/welcome',
+    staticFileUpload: '/api/files/upload-static-file',
   },
 });

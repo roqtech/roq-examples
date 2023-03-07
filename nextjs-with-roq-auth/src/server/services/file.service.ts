@@ -1,11 +1,14 @@
-import { roqClient } from "server/roq";
+import { roqClient } from 'server/roq';
+import { FileUploadResponseType } from '@roq/nodejs/dist/src/fileClient/types/file-upload-response.type';
+import fs from 'fs';
+import { FileQuery } from '@roq/nodejs/dist/src/generated/sdk';
 
 export class FileService {
   static async getFilesForFeed(
-    currentUserId: string,
-    category: string,
-    limit: number = 10,
-    offset: number = 0
+      currentUserId: string,
+      category: string,
+      limit: number = 10,
+      offset: number = 0
   ) {
     const filesResult = await roqClient.asUser(currentUserId).files({
       filter: {
@@ -31,5 +34,23 @@ export class FileService {
       files: filesClean,
       totalCount: filesResult?.files?.totalCount,
     };
+  }
+
+  static file(userId: string, fileId: string): Promise<FileQuery> {
+    return roqClient.asUser(userId).file({
+      id: fileId
+    })
+  }
+
+  static async uploadStaticFile(filePath: string, userId: string): Promise<FileUploadResponseType> {
+    const file = fs.readFileSync(filePath);
+    return roqClient.asUser(userId).uploadFile({
+      fileInfo: {
+        file,
+        contentType: 'image/svg+xml',
+        name: 'brand-big.svg',
+        fileCategory: 'USER_FILES',
+      },
+    });
   }
 }

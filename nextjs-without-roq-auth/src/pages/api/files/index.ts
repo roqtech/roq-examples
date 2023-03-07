@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession, Session } from 'next-auth';
-import authOptions from 'pages/api/auth/[...nextauth]'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 import { FileService } from 'server/services/file.service';
 import { FileCategories } from 'server/enums';
 import { FilesFetchDto } from 'server/dtos/files-fetch.dto';

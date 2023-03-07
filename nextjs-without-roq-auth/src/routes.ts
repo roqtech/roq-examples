@@ -29,6 +29,7 @@ export const routes = Object.freeze({
       upload: '/files/upload',
       controlledUpload: '/files/controlled-upload',
       dropzone: '/files/dropzone',
+      serverSide: '/files/server-side',
     },
     ui: {
       home: '/ui',
@@ -36,7 +37,8 @@ export const routes = Object.freeze({
     },
   },
   server: {
-    files: "/api/files",
-    welcome: "/api/welcome",
+    files: '/api/files',
+    staticFileUpload: '/api/files/upload-static-file',
+    welcome: '/api/welcome',
   },
 });

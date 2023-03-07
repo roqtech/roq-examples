@@ -129,6 +129,9 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
                         <li><Link
                             className={isRouteActive(routes.frontend.files.dropzone) ? styles.sidebarNavigationLinkActive : ''}
                             href={routes.frontend.files.dropzone}>File Dropzone</Link></li>
+                        <li><Link
+                            className={isRouteActive(routes.frontend.files.serverSide) ? styles.sidebarNavigationLinkActive : ''}
+                            href={routes.frontend.files.serverSide}>Server Side File Upload</Link></li>
                       </ul>
                     </li>
                   </ul>
