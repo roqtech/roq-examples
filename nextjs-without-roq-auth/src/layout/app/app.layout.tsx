@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { routes } from 'routes';
 
 import Link from 'next/link';
+import { ChatMessageBell, NotificationBell } from '@roq/nextjs';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -145,6 +146,25 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
 
             {/*  */}
             <section className={styles.content}>
+              <nav className={styles.globalNavigation}>
+                <ul className={styles.globalNavigationList}>
+                  {status === 'authenticated' && (
+                      <>
+                        <li>
+                          <NotificationBell/>
+                        </li>
+                        <li>
+                          <ChatMessageBell onClick={() => router.push('/chat')}/>
+                        </li>
+                        <li>
+                          <button className="btn btn-sm" onClick={() => signOut()}>
+                            Logout
+                          </button>
+                        </li>
+                      </>
+                  )}
+                </ul>
+              </nav>
               <main id="main" className={styles.main}>
                 {!!title && (
                     <section className={styles.pageHeader}>

@@ -2,7 +2,7 @@ import { ReactNode, useCallback } from 'react';
 import Head from 'next/head';
 import styles from 'layout/app/app.layout.module.css';
 import Image from 'next/image';
-import { signOut, useSession } from '@roq/nextjs';
+import { ChatMessageBell, NotificationBell, signOut, useSession } from '@roq/nextjs';
 import { useRouter } from 'next/router';
 import { routes } from 'routes';
 
@@ -42,13 +42,13 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
         <section className={styles.container}>
           <aside className={styles.sidebar}>
             <div className={styles.sidebarHeader}>
-              <Link href={"/"} role="presentation" className={styles.brand}>
+              <Link href={'/'} role="presentation" className={styles.brand}>
                 <Image
-                  src="/brand.svg"
-                  alt="ROQ Logo"
-                  width={80}
-                  height={40}
-                  priority
+                    src="/brand.svg"
+                    alt="ROQ Logo"
+                    width={80}
+                    height={40}
+                    priority
                 />
               </Link>
             </div>
@@ -134,12 +134,31 @@ export default function AppLayout({ children, title, description }: AppLayoutPro
 
           {/*  */}
           <section className={styles.content}>
+            <nav className={styles.globalNavigation}>
+              <ul className={styles.globalNavigationList}>
+                {status === 'authenticated' && (
+                    <>
+                      <li>
+                        <NotificationBell/>
+                      </li>
+                      <li>
+                        <ChatMessageBell onClick={() => router.push('/chat')}/>
+                      </li>
+                      <li>
+                        <button className="btn btn-sm" onClick={signOut}>
+                          Logout
+                        </button>
+                      </li>
+                    </>
+                )}
+              </ul>
+            </nav>
             <main id="main" className={styles.main}>
               {!!title && (
-                <section className={styles.pageHeader}>
-                  {title && <h2 className={styles.pageTitle}>{title}</h2>}
-                  {description && <p className={styles.pageDescription}>{description}</p>}
-                </section>
+                  <section className={styles.pageHeader}>
+                    {title && <h2 className={styles.pageTitle}>{title}</h2>}
+                    {description && <p className={styles.pageDescription}>{description}</p>}
+                  </section>
               )}
               <div className={styles.page}>
                 {children}

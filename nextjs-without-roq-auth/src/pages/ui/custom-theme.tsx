@@ -2,23 +2,11 @@ import AppLayout from 'layout/app/app.layout';
 import DemoLayout from 'layout/demo/demo.layout';
 import styles from 'pages/ui/custom-theme.module.css';
 import palettes from 'pages/ui/palettes-data.json';
-import clsx from 'clsx';
 import { ActionTypeEnum, GlobalContext } from '../../context';
 import { useCallback, useContext } from 'react';
 import { createCustomTheme } from '@roq/nextjs';
 import { roqThemeLight } from '../../styles/roq-theme';
-
-interface PaletteColorInterface {
-    rgb: string[],
-    hex: string
-}
-
-interface PaletteInterface {
-    primary: PaletteColorInterface,
-    secondary: PaletteColorInterface,
-    third: PaletteColorInterface,
-    forth: PaletteColorInterface
-}
+import { PaletteCard, PaletteInterface } from 'components/palette-card';
 
 function CustomTheme() {
     const { state, dispatch } = useContext(GlobalContext);
@@ -71,34 +59,8 @@ function CustomTheme() {
                     <div className={styles.feed}>
                         {
                             palettes.map((palette, index) => (
-                                <div className={styles.item}
-                                     key={`${index}`}
-                                     data-index={index}
-                                     style={{ animationDelay: `${index * 30}ms` }}>
-                                    <div className={styles.palette}>
-                                        {
-                                            Object.entries(palette).reverse().map(([key, { hex, rgb }], subIndex) => (
-                                                <div
-                                                    key={`${subIndex}`}
-                                                    className={clsx(styles.place, styles[`c${3 - subIndex}`])}
-                                                    style={{ backgroundColor: `rgb(${rgb[0]},${rgb[1]},${rgb[2]})` }}
-                                                >
-                                                    <span data-copy={`#${hex}`}>#{hex}</span>
-                                                </div>
-                                            ))
-                                        }
-                                    </div>
-                                    <div className={styles.flex}>
-                                        <div className={styles.actions}>
-                                            <div className={styles.button} onClick={() => onSelect(palette)}>
-                                                {
-                                                    state?.theme?.base?.primary === `#${palette.primary.hex}` ?
-                                                        `Selected` : `Select`
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <PaletteCard palette={palette} index={index} key={index} onSelect={onSelect}
+                                             isSelected={state?.theme?.base?.primary === `#${palette.primary.hex}`}/>
                             ))
                         }
                     </div>
