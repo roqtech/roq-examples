@@ -11,7 +11,11 @@ class AuthRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`/auth/callback`, this.authController.onAuthorize);
+    this.router.get(`/api/auth/callback`, this.authController.onAuthorize.bind(this.authController));
+    this.router.get('/api/auth/login', this.authController.onLogin.bind(this.authController));
+    this.router.get('/api/auth/signup', this.authController.signup.bind(this.authController));
+    this.router.get('/api/auth/session', this.authController.session.bind(this.authController));
+    this.router.get('/api/auth/logout', this.authController.logout.bind(this.authController));
   }
 }
 

@@ -98,8 +98,8 @@
 
 .content {
   flex-grow: 1;
-  min-width: 0px;
-  margin-left: var(--sidebar-with, 320px);
+  min-width: 0;
+  margin-left: 150px;
 }
 
 .main {
@@ -130,4 +130,47 @@
 }
 
 .footer {
+}
+
+.demo {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.content {
+  flex: 1;
+}
+
+.locked {
+  filter: blur(2px);
+  opacity: 0.7;
+}
+
+.lockBox {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--roq-border-radius);
+  z-index: 1;
+  /* opacity: 0.9; */
+  /* background-color: rgba(255, 255, 255, 0.2); */
+}
+
+.lockBoxContent {
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #1e2b48;
+  text-align: center;
 }

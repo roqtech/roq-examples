@@ -1,0 +1,49 @@
+.page {
+    width: 100%;
+    margin-top: 3rem;
+    box-sizing: border-box;
+}
+
+.headRow {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.headingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.headAction {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.headAction > .button {
+    cursor: pointer;
+    font-size: var(--roq-font-base);
+    border-radius: var(--roq-border-radius);
+    background-color: var(--roq-color-primary);
+    color: white;
+    padding: 10px 20px;
+}
+
+.headAction > .button[data-disabled=true] {
+    cursor: not-allowed;
+    background-color: white;
+    border: none;
+}
+
+.feed {
+    padding: 5px 20px 30px;
+    display: grid;
+    margin-top: -4px;
+    grid-template-columns: 15% 15% 15% 15% 15%;
+    grid-column-gap: 4%;
+    grid-row-gap: 30px;
+}

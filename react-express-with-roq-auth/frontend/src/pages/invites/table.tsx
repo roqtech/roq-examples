@@ -1,7 +1,7 @@
-import { UserInvitesTable } from "@roq/ui-react";
+import { UserInvitesTable } from '@roq/ui-react';
 
 export const InviteTable = () => {
-  return <UserInvitesTable />;
+  return <UserInvitesTable/>;
 };
 
 export default InviteTable;

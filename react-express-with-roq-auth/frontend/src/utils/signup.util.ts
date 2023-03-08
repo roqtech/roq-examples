@@ -1,17 +1,21 @@
+import { clientConfig } from '../config';
+
 export interface SignUpParamsInterface {
   isBuyer?: boolean;
 }
 
-export const signup = (params?: SignUpParamsInterface) => {
+export const signup = async (params?: SignUpParamsInterface) => {
   const signupUrl = new URL(
-    process.env.NEXT_PUBLIC_BASE_URL + "/api/auth/signup"
+      clientConfig.roq.serverUrl + '/auth/signup'
   );
 
   if (params.isBuyer) {
-    signupUrl.searchParams.set("role", "buyer");
+    signupUrl.searchParams.set('role', 'buyer');
   }
+  await fetch(signupUrl.toString())
+      .then((res) => res.text())
 
-  if (typeof window !== "undefined") {
+  if (typeof window !== 'undefined') {
     window.location.href = signupUrl.toString();
   }
 };

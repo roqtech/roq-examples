@@ -4,7 +4,7 @@ import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
 import hpp from 'hpp';
-import { NODE_ENV, PORT, ORIGIN, CREDENTIALS } from '@config';
+import { serverConfig } from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
 import { auth } from '@roq/expressjs';
@@ -16,8 +16,8 @@ class App {
 
   constructor(routes: Routes[]) {
     this.app = express();
-    this.env = NODE_ENV || 'development';
-    this.port = PORT || 3000;
+    this.env = serverConfig.nodeEnv || 'development';
+    this.port = serverConfig.port || 3000;
 
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
@@ -38,7 +38,7 @@ class App {
   }
 
   private initializeMiddlewares() {
-    this.app.use(cors({ origin: '*', credentials: CREDENTIALS }));
+    this.app.use(cors({ origin: serverConfig.origin, credentials: serverConfig.credentials }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());

@@ -2,11 +2,10 @@
 
 :root {
   --max-width: 1100px;
-  --border-radius: 12px;
+  --border-radius: var(--roq-border-radius);
   --font-mono: Menlo;
-
   --foreground-rgb: 0, 0, 0;
-  --primary-color-rgb: 32, 123, 229;
+  --primary-color-rgb: var(--roq-color-primary-rgb);
   --light-grey-rgb: 201, 197, 211;
 }
 
