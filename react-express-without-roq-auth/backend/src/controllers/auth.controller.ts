@@ -1,181 +1,100 @@
-import { NextFunction, Request, Response } from 'express';
-import { callbackHandler } from '@roq/expressjs/dist/src/handlers/callback.handler';
-import { loginHandler } from '@roq/expressjs/dist/src/handlers/login.handler';
-import { signUpHandler } from '@roq/expressjs/dist/src/handlers/signup.handler';
-import { logoutHandler } from '@roq/expressjs/dist/src/handlers/logout.handler';
-import { serverConfig } from '@config';
-import { ConfigInterface } from '@roq/expressjs/dist/src/config';
-import { RoqCookieNames, SessionStatuses } from '@roq/expressjs/dist/src/enums';
-import { decode, JwtPayload, verify } from 'jsonwebtoken';
-import { ClientSession, RoqAccessTokenPayload, RoqIdTokenPayload } from '@roq/expressjs';
+import { NextFunction, Response } from 'express';
 import UserService from '@services/users.service';
 import { roqClient } from '@/roq';
+import AuthService from '@services/auth.service';
 
 export default class AuthController {
-  static config: ConfigInterface;
   private userService = new UserService();
+  private authService = new AuthService();
 
-  constructor() {
-    AuthController.config = {
-      secret: serverConfig.roq.authSecret,
-      clientId: serverConfig.roq.clientId,
-      issuerBaseURL: serverConfig.roq.authURL,
-      clientSecret: serverConfig.roq.clientSecret,
-      baseURL: serverConfig.roq.baseURL,
-      stateExp: 120,
-      authorizationParams: {
-        scope: serverConfig.roq.authorizationParams.scope,
-        response_type: serverConfig.roq.authorizationParams.response_type,
-        redirect_uri: serverConfig.roq.authorizationParams.redirect_uri,
-        response_mode: serverConfig.roq.authorizationParams.response_mode,
-      },
-      session: {
-        name: RoqCookieNames.sessionToken,
-        maxAge: 3600 * 60,
-        inactivityTimeout: 3600,
-        cookie: {
-          httpOnly: true,
-          sameSite: 'lax',
-        },
-      },
-      routes: {
-        postLoginRedirect: 'http://localhost:3021',
-        postLogoutRedirect: 'http://localhost:3021',
-      },
-    };
-  }
+  private async createLocalUser({ email, password, name, customData }) {
+    const type = customData?.role || 'user';
+    const createdUser = await this.authService.signup({ name, email, password, type, roqUserId: email });
 
-  private async createLocalUser({ user: roqUser, roqUserId }: ClientSession, role: string) {
-    const type = role || 'user';
-    await this.userService.createUser({
-      email: roqUser.email,
-      roqUserId,
-      type,
-    });
-    await roqClient.asSuperAdmin().updateUser({
-      id: roqUserId,
-      user: {
-        // # Todo API Should allow
-        // reference: localUser.id,
-        customData: {
-          type,
-        },
-      },
-    });
-    return roqClient.asSuperAdmin().notify({
-      notification: {
-        key: 'welcome',
-        recipients: { userIds: [roqUserId] },
-      },
-    });
-  }
-
-  updateUser({ user: roqUser, roqUserId }: ClientSession) {
-    return this.userService.users.upsert({
-      where: { roqUserId },
-      update: roqUser,
-      create: { ...roqUser, roqUserId, password: 'roq4u', email: roqUser.email },
-    });
-  }
-
-  async onAuthorize(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { state, action } = req.query;
-      let role, sync;
-      try {
-        const parsed = JSON.parse(Buffer.from(state as string, 'base64').toString());
-        role = parsed.role;
-        sync = parsed.sync;
-      } catch (e) {
-        role = 'user';
-        sync = 'f';
-      }
-      const clientSession = AuthController.getSessionData(req);
-      if (clientSession) {
-        if (action === 'signUp') {
-          await this.createLocalUser(clientSession, role as string);
-        } else if (action === 'login' && sync === 't') {
-          await this.updateUser(clientSession);
-        }
-      }
-      return callbackHandler(AuthController.config, req, res);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  async onLogin(req: Request, res: Response, next: NextFunction): Promise<void> {
-    return loginHandler(AuthController.config, req, res);
-  }
-
-  async signup(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const redirectUrl = new URL(serverConfig.roq.authorizationParams.redirect_uri);
-    return signUpHandler(
-      {
-        ...AuthController.config,
-        authorizationParams: {
-          ...AuthController.config.authorizationParams,
-          redirect_uri: redirectUrl.pathname,
-        },
-      },
-      req,
-      res,
-    );
-  }
-
-  async logout(req: Request, res: Response, next: NextFunction): Promise<void> {
-    return logoutHandler(AuthController.config, req, res);
-  }
-
-  static generateClientSession(sessionPayload): ClientSession {
-    const idTokenPayload = decode(sessionPayload.roqIdToken || '') as RoqIdTokenPayload;
-    const accessTokenPayload = decode(sessionPayload.roqAccessToken || '') as RoqAccessTokenPayload;
-
-    //   Prep session info and return it. ID token data may not always be present
-    const { firstName, lastName, email, timezone, locale, roles, tenantId } = idTokenPayload || {};
-
-    const session: ClientSession = {
-      id: sessionPayload.id,
-      roqAccessToken: sessionPayload.roqAccessToken,
-      roqUserId: accessTokenPayload.roqUserId,
+    const [firstName, lastName] = name?.split(' ');
+    const { createUser: roqUser } = await roqClient.asSuperAdmin().createUser({
       user: {
         firstName,
         lastName,
-        email,
-        timezone,
-        locale,
-        roles,
-        tenantId,
+        email: createdUser.email,
+        active: true,
+        locale: 'en-US',
+        isOptedIn: true,
+        reference: createdUser.id,
       },
-      iat: sessionPayload.iat,
-      exp: sessionPayload.exp,
+    });
+
+    const { password: _, ...rest } = await this.userService.updateUser(createdUser.id, { roqUserId: roqUser.id });
+
+    if (customData) {
+      await roqClient.asSuperAdmin().updateUser({
+        id: roqUser.id,
+        user: {
+          customData,
+        },
+      });
+    }
+
+    await roqClient.asSuperAdmin().notify({
+      notification: {
+        key: 'welcome',
+        recipients: { userIds: [roqUser.id] },
+      },
+    });
+
+    return {
+      ...rest,
+      roqUserId: roqUser.id,
     };
-
-    return session;
   }
 
-  static getSessionData(req: Request) {
-    const sessionToken = req.cookies[RoqCookieNames.sessionToken];
+  updateUser({ email, roqUserId, name }) {
+    return this.userService.users.upsert({
+      where: { roqUserId },
+      update: { email },
+      create: { roqUserId, password: 'roq4u', email, name },
+    });
+  }
 
-    // Check token exists
-    if (!sessionToken) {
-      return;
-    }
+  async onLogin(req, res: Response, next: NextFunction): Promise<void> {
+    return res.redirect('/');
+  }
+
+  getUserToken(roqUserId: string): Promise<string> {
+    return roqClient.authorization.createUserToken(roqUserId);
+  }
+
+  async signup(req, res: Response, next: NextFunction): Promise<void> {
     try {
-      const sessionPayload = verify(sessionToken, AuthController.config.secret) as JwtPayload;
-      return AuthController.generateClientSession(sessionPayload);
+      req.user = await this.createLocalUser(req.body);
+      req.login(req.user, err => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        return res.redirect('/');
+      });
     } catch (e) {
-      return;
+      next(e);
     }
-    //   Prep session info and return it. ID token data may not always be present
   }
 
-  async session(req: Request, res: Response, next: NextFunction) {
-    const session = AuthController.getSessionData(req);
-    if (!session) {
-      console.log('No session token was found');
-      return res.status(200).json({ session: null, status: SessionStatuses.unauthenticated });
+  async logout(req, res: Response, next: NextFunction): Promise<void> {
+    req.logout(err => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      return res.redirect('/');
+    });
+  }
+
+  async session(req, res: Response, next: NextFunction) {
+    if (req.isAuthenticated()) {
+      if (!req.user?.roqAccessToken) {
+        req.user.roqAccessToken = await this.getUserToken(req.user.roqUserId);
+      }
+      return res.status(200).json({ session: req.user, status: 'authenticated' });
+    } else {
+      return res.status(200).json({ session: null, status: 'unauthenticated' });
     }
-    return res.status(200).json({ session, status: SessionStatuses.authenticated });
   }
 }

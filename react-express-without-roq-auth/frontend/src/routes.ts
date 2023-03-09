@@ -3,8 +3,7 @@ export const routes = Object.freeze({
     authentication: {
       home: "/authentication",
       simple: "/authentication/simple",
-      registerWithMetadata: "/authentication/register-with-metadata",
-      saveUserOnLogin: "/authentication/save-user-on-login",
+      registerWithMetadata: "/authentication/register-with-metadata"
     },
     invites: {
       home: "/invites",

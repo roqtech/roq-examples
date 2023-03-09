@@ -25,25 +25,35 @@ class UserService {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const findUser: User = await this.users.findUnique({ where: { email: userData.email } });
-    if (findUser) throw new HttpException(409, `This email ${userData.email} already exists`);
+    if (!!findUser) {
+      new HttpException(409, `This email ${userData.email} already exists`);
+    }
 
     const hashedPassword = await hash(userData.password, 10);
     const createUserData: User = await this.users.create({
-      data: { ...userData, password: hashedPassword, email: userData.email, roqUserId: userData.roqUserId },
+      data: {
+        ...userData,
+        password: hashedPassword,
+        email: userData.email,
+        roqUserId: userData.roqUserId,
+        name: userData.name,
+      },
     });
     return createUserData;
   }
 
-  public async updateUser(userId: string, userData: CreateUserDto): Promise<User> {
+  public async updateUser(userId: string, userData: Partial<CreateUserDto>): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, 'userData is empty');
 
     const findUser: User = await this.users.findUnique({ where: { id: userId } });
     if (!findUser) throw new HttpException(409, "User doesn't exist");
 
-    const hashedPassword = await hash(userData.password, 10);
+    if (userData?.password) {
+      userData.password = await hash(userData.password, 10);
+    }
     const updateUserData = await this.users.update({
       where: { id: userId },
-      data: { ...userData, password: hashedPassword },
+      data: { ...userData },
     });
     return updateUserData;
   }

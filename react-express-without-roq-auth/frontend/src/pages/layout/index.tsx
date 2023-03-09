@@ -3,11 +3,16 @@ import { ChatMessageBell, NotificationBell, signIn, signOut, useSession } from '
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
 import DemoLayout from './demo.layout';
+import Loader from '../../components/loader';
 
 function AppLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const { status } = useSession();
+
+  if (status === 'loading') {
+    return (<Loader/>);
+  }
   return (
       <div className="app">
         <header className="header">
@@ -62,13 +67,6 @@ function AppLayout() {
                             }
                         >
                           Register with metadata
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                            to={routes.frontend.authentication.saveUserOnLogin}
-                        >
-                          Save user on login
                         </Link>
                       </li>
                     </ul>

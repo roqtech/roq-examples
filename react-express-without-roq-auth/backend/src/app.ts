@@ -7,12 +7,17 @@ import hpp from 'hpp';
 import { serverConfig } from '@config';
 import { Routes } from '@interfaces/routes.interface';
 import errorMiddleware from '@middlewares/error.middleware';
-import { auth } from '@roq/expressjs';
+import session from 'express-session';
+import passport from 'passport';
+import { LocalStrategy } from '@/strategies';
+import UserService from '@services/users.service';
 
 class App {
   public app: express.Application;
   public env: string;
   public port: string | number;
+
+  userService = new UserService();
 
   constructor(routes: Routes[]) {
     this.app = express();
@@ -20,6 +25,7 @@ class App {
     this.port = serverConfig.port || 3000;
 
     this.initializeMiddlewares();
+    this.initializePassport();
     this.initializeRoutes(routes);
     this.initializeErrorHandling();
   }
@@ -47,11 +53,31 @@ class App {
     this.app.use(cookieParser());
   }
 
+  private initializePassport() {
+    this.app.set('trust proxy', 1);
+    this.app.use(
+      session({
+        secret: serverConfig.secretKey,
+        resave: false,
+        saveUninitialized: false,
+      }),
+    );
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
+    passport.use(new LocalStrategy().initialize());
+    passport.serializeUser((user, done) => {
+      done(null, user.id);
+    });
+    passport.deserializeUser(async (id, done) => {
+      const { password: _, ...rest } = await this.userService.findUserById(id);
+      done(null, rest);
+    });
+  }
+
   private initializeRoutes(routes: Routes[]) {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
-    this.app.use(auth());
   }
 
   private initializeErrorHandling() {

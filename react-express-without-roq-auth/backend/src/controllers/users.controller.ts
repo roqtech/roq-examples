@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '@prisma/client';
 import { CreateUserDto } from '@dtos/users.dto';
 import userService from '@services/users.service';
+import { roqClient } from '@/roq';
 
 class UsersController {
   public userService = new userService();
@@ -60,6 +61,20 @@ class UsersController {
       next(error);
     }
   };
+
+  async welcome(req, res, next) {
+    if (req.isAuthenticated()) {
+      const response = await roqClient.asSuperAdmin().notify({
+        notification: {
+          key: 'welcome',
+          recipients: { userIds: [req?.user?.roqUserId] },
+        },
+      });
+      res.status(200).json(response);
+    } else {
+      res.status(401).redirect('/');
+    }
+  }
 }
 
 export default UsersController;

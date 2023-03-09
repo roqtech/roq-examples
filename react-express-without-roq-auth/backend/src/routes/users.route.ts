@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import UsersController from '@controllers/users.controller';
 import { Routes } from '@interfaces/routes.interface';
-import { requireAuth } from '@roq/expressjs';
 
 class UsersRoute implements Routes {
   public path = '/users';
@@ -13,8 +12,9 @@ class UsersRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, requireAuth, this.usersController.getUsers);
-    this.router.get(`${this.path}/:id(\\d+)`, requireAuth, this.usersController.getUserById);
+    this.router.get(`${this.path}`, this.usersController.getUsers.bind(this.usersController));
+    this.router.get(`${this.path}`, this.usersController.getUsers.bind(this.usersController));
+    this.router.post(`/api/welcome`, this.usersController.welcome.bind(this.usersController));
   }
 }
 

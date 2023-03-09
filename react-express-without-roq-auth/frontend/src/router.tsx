@@ -3,7 +3,6 @@ import DashboardPage from 'pages/dashboard';
 import { routes } from 'routes';
 import SimpleAuthPage from 'pages/authentication';
 import RegisterWithMetadata from 'pages/authentication/register-with-metadata';
-import SaveOnLogin from 'pages/authentication/save-user-on-login';
 import InvitesTablePage from 'pages/invites';
 import InvitePane from 'pages/invites/pane';
 import CustomTheme from 'pages/ui/custom-theme';
@@ -20,7 +19,6 @@ import FileUpload from 'pages/files/controlled-upload';
 import FileUploadDropzone from 'pages/files/dropzone';
 import FileServerSideUpload from 'pages/files/server-side';
 import AppLayout from 'pages/layout';
-import Login from 'pages/auth/login';
 
 const router = createBrowserRouter([
   {
@@ -42,10 +40,6 @@ const router = createBrowserRouter([
       {
         path: routes.frontend.authentication.registerWithMetadata,
         element: <RegisterWithMetadata />,
-      },
-      {
-        path: routes.frontend.authentication.saveUserOnLogin,
-        element: <SaveOnLogin />,
       },
       {
         path: routes.frontend.invites.home,
@@ -128,11 +122,7 @@ const router = createBrowserRouter([
         element: <FileServerSideUpload/>,
       }
     ],
-  },
-  {
-    path: "/auth/login",
-    element: <Login />,
-  },
+  }
 ]);
 
 export default router;

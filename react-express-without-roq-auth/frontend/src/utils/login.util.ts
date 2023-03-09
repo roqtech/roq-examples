@@ -1,22 +1,16 @@
-import { clientConfig } from '../config';
-
 export interface LoginParamsInterface {
     syncDb?: boolean;
+    email: string,
+    password: string,
 }
 
 export const login = async (params?: LoginParamsInterface) => {
-    const loginUrl = new URL(
-        clientConfig.roq.serverUrl + '/auth/login'
-    );
 
-    if (params?.syncDb) {
-        loginUrl.searchParams.set('sync', 't');
-    }
+    await fetch('/api/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(params),
+        headers: { 'content-type': 'application/json' }
+    })
+        .then((res) => window.location.reload()).catch(console.error)
 
-    await fetch(loginUrl.toString())
-        .then((res) => res.text())
-
-    if (typeof window !== 'undefined') {
-        window.location.href = loginUrl.toString();
-    }
 };
