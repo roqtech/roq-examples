@@ -6,7 +6,7 @@ export interface LoginParamsInterface {
 
 export const login = async (params?: LoginParamsInterface) => {
     const loginUrl = new URL(
-        clientConfig.roq.serverUrl + '/auth/login'
+        clientConfig.roq.serverUrl + '/api/auth/login'
     );
 
     if (params?.syncDb) {

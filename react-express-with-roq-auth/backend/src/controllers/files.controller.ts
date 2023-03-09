@@ -10,7 +10,6 @@ export default class FilesController {
       return res.status(401).json({ code: 'Forbidden', message: 'User not logged in' });
     }
     try {
-      console.log({ session });
       const { roqUserId: userId } = session;
       const { fileUploadResponse } = await FileService.uploadStaticFile(join(__dirname, '../../', 'public/brand-big.svg'), userId);
       const { file } = await FileService.file(userId, fileUploadResponse.id);

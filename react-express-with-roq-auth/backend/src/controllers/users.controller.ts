@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '@prisma/client';
 import { CreateUserDto } from '@dtos/users.dto';
 import userService from '@services/users.service';
+import { roqClient } from '@/roq';
+import AuthController from '@controllers/auth.controller';
 
 class UsersController {
   public userService = new userService();
@@ -60,6 +62,21 @@ class UsersController {
       next(error);
     }
   };
+
+  async welcome(req, res) {
+    const session = AuthController.getSessionData(req);
+    if (!session) {
+      return res.status(401).json({ code: 'Forbidden', message: 'User not logged in' });
+    }
+    const { roqUserId: userId } = session;
+    const response = await roqClient.asSuperAdmin().notify({
+      notification: {
+        key: 'welcome',
+        recipients: { userIds: [userId] },
+      },
+    });
+    res.status(200).json(response);
+  }
 }
 
 export default UsersController;

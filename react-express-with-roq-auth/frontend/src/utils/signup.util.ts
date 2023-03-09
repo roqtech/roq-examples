@@ -6,7 +6,7 @@ export interface SignUpParamsInterface {
 
 export const signup = async (params?: SignUpParamsInterface) => {
   const signupUrl = new URL(
-      clientConfig.roq.serverUrl + '/auth/signup'
+      clientConfig.roq.serverUrl + '/api/auth/signup'
   );
 
   if (params.isBuyer) {

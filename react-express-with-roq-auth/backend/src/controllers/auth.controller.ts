@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
-import { callbackHandler } from '@roq/expressjs/dist/src/handlers/callback.handler';
 import { loginHandler } from '@roq/expressjs/dist/src/handlers/login.handler';
 import { signUpHandler } from '@roq/expressjs/dist/src/handlers/signup.handler';
 import { logoutHandler } from '@roq/expressjs/dist/src/handlers/logout.handler';
+import { RoqClient, Session, TokenVerifier } from '@roq/expressjs/dist/src/lib';
 import { serverConfig } from '@config';
 import { ConfigInterface } from '@roq/expressjs/dist/src/config';
 import { RoqCookieNames, SessionStatuses } from '@roq/expressjs/dist/src/enums';
 import { decode, JwtPayload, verify } from 'jsonwebtoken';
-import { ClientSession, RoqAccessTokenPayload, RoqIdTokenPayload } from '@roq/expressjs';
+import { ClientSession, RoqAccessTokenPayload, RoqAuthTokens, RoqIdTokenPayload } from '@roq/expressjs';
 import UserService from '@services/users.service';
 import { roqClient } from '@/roq';
+import { RoqErrors } from '@roq/expressjs/dist/src/lib/error';
+import { serialize } from 'cookie';
 
 export default class AuthController {
   static config: ConfigInterface;
@@ -51,6 +53,7 @@ export default class AuthController {
       email: roqUser.email,
       roqUserId,
       type,
+      password: 'roq4u',
     });
     await roqClient.asSuperAdmin().updateUser({
       id: roqUserId,
@@ -78,28 +81,86 @@ export default class AuthController {
     });
   }
 
-  async onAuthorize(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async verifyAuthorizeState(req: Request, res: Response, next: NextFunction) {
+    const { state, action, authorization_code: code } = req.query;
+    const originalState = req.cookies[RoqCookieNames.state];
+    if (!originalState) {
+      return res.status(401).json(RoqErrors.LOGIN_STATE_INVALID);
+    }
+    const isStateValid = TokenVerifier.verifyState(originalState, state as string);
+
+    if (!isStateValid) {
+      return res.status(401).json(RoqErrors.LOGIN_STATE_INVALID);
+    }
+
+    // Get tokens from the token endpoint
+    const roqTokens = await RoqClient.getToken(AuthController.config, code as string);
+
+    if (!roqTokens?.accessToken) {
+      return res.status(401).json(RoqErrors.AUTH_FAILED);
+    }
+
+    const { accessToken, idToken, refreshToken } = roqTokens;
+
+    // Generate a session token -> cookie
+    const sessionCookie = Session.createSerializedSessionCookie(AuthController.config, accessToken, idToken, refreshToken);
+
+    // Clear the state and nonce cookies, and set the session cookie
+    res.setHeader('set-cookie', [
+      serialize(RoqCookieNames.state, '', {
+        path: '/',
+        maxAge: -1,
+      }),
+      serialize(RoqCookieNames.nonce, '', {
+        path: '/',
+        maxAge: -1,
+      }),
+      sessionCookie,
+    ]);
+    return roqTokens;
+  }
+
+  private parseQuery(state: string): { role: string; sync: string } {
+    let role, sync;
+    console.log({ state });
+    try {
+      const parsed = JSON.parse(Buffer.from(state as string, 'base64').toString());
+      console.log({ parsed });
+      role = parsed.role;
+      sync = parsed.sync;
+    } catch (e) {
+      console.error({ e });
+      role = 'user';
+      sync = 'f';
+    }
+    return {
+      role,
+      sync,
+    };
+  }
+
+  async onAuthorize(req: Request, res: Response, next: NextFunction) {
     try {
       const { state, action } = req.query;
-      let role, sync;
-      try {
-        const parsed = JSON.parse(Buffer.from(state as string, 'base64').toString());
-        role = parsed.role;
-        sync = parsed.sync;
-      } catch (e) {
-        role = 'user';
-        sync = 'f';
+      const response = await this.verifyAuthorizeState(req, res, next);
+      let roqTokens;
+      if (!roqTokens?.idToken && !roqTokens?.accessToken) {
+        roqTokens = response as RoqAuthTokens;
       }
-      const clientSession = AuthController.getSessionData(req);
-      if (clientSession) {
-        if (action === 'signUp') {
-          await this.createLocalUser(clientSession, role as string);
-        } else if (action === 'login' && sync === 't') {
-          await this.updateUser(clientSession);
-        }
+      const clientSession = AuthController.generateClientSession({
+        roqIdToken: roqTokens.idToken,
+        roqAccessToken: roqTokens.accessToken,
+      });
+      const { role, sync } = this.parseQuery(state as string);
+      if (action === 'signUp') {
+        await this.createLocalUser(clientSession, role as string);
+      } else if (action === 'login' && sync === 't') {
+        await this.updateUser(clientSession);
       }
-      return callbackHandler(AuthController.config, req, res);
+      const successUrl = AuthController.config.routes.postLoginRedirect || AuthController.config.baseURL;
+      return res.status(302).redirect(successUrl);
     } catch (error) {
+      console.error({ error });
       next(error);
     }
   }

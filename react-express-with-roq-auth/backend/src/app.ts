@@ -51,7 +51,6 @@ class App {
     routes.forEach(route => {
       this.app.use('/', route.router);
     });
-    this.app.use(auth());
   }
 
   private initializeErrorHandling() {
