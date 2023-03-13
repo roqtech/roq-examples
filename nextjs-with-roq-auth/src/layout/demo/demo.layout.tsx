@@ -1,6 +1,7 @@
 import { ReactNode, useMemo } from "react";
 import { useSession } from "@roq/nextjs";
 import styles from "layout/demo/demo.layout.module.css";
+import Link from "next/link";
 
 interface DemoLayoutProps {
   requireSession?: boolean;
@@ -26,10 +27,13 @@ const LockBox = () => (
     <div className={styles.lockBoxContent}>
       <LockIcon />
       <h1>No session</h1>
-      <div>
-        Authorize through one of the user management methods to have an access
-        for example.
-      </div>
+      <h3>
+        Authenticate through one of the user management methods to have an
+        access for example.
+      </h3>
+      <Link href="/authentication">
+        <button className="btn">Authenticate</button>
+      </Link>
     </div>
   </div>
 );
