@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@next/font": "13.1.1",
     "@prisma/client": "^4.10.1",
     "@roq/nextjs": "^0.1.68",

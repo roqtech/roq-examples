@@ -116,6 +116,20 @@ export default function AppLayout({
                           Save user on login
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          className={
+                            isRouteActive(
+                              routes.frontend.userManagement.createUser
+                            )
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.userManagement.createUser}
+                        >
+                          Create user programmatically
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                   <li>
