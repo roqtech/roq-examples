@@ -13,8 +13,9 @@ class UsersRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}`, requireAuth, this.usersController.getUsers);
-    this.router.get(`${this.path}/:id(\\d+)`, requireAuth, this.usersController.getUserById);
+    this.router.get(`${this.path}`, requireAuth, this.usersController.getUsers.bind(this.usersController));
+    this.router.get(`${this.path}/:id(\\d+)`, requireAuth, this.usersController.getUserById.bind(this.usersController));
+    this.router.post(`/api/welcome`, this.usersController.welcome.bind(this.usersController));
   }
 }
 

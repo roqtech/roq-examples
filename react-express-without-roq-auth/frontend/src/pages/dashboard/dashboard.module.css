@@ -1,0 +1,11 @@
+.codeContainer {
+  width: 100%;
+  max-width: 400px;
+}
+
+.code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: inline-block;
+}

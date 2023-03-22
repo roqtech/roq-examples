@@ -6,6 +6,9 @@ export const routes = Object.freeze({
       registerWithMetadata: "/authentication/register-with-metadata",
       saveUserOnLogin: "/authentication/save-user-on-login",
     },
+    userManagement: {
+      createUser: "/users/create-user-programmatically",
+    },
     invites: {
       home: "/invites",
       table: "/invites/table",
@@ -34,10 +37,15 @@ export const routes = Object.freeze({
       upload: "/files/upload",
       controlledUpload: "/files/controlled-upload",
       dropdzone: "/files/dropzone",
+      serverSide: "/files/server-side",
     },
   },
   server: {
     files: "/api/files",
     welcome: "/api/welcome",
+    staticFileUpload: "/api/files/upload-static-file",
+    userManagement: {
+      createUser: "/api/users",
+    },
   },
 });

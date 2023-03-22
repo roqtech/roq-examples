@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "heroku-postbuild": "npm run build",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@faker-js/faker": "^7.6.0",
     "@next/font": "13.1.1",
     "@prisma/client": "^4.10.1",
     "@roq/nextjs": "^0.1.69-rc6",

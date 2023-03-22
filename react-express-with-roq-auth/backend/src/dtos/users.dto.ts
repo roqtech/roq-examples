@@ -5,5 +5,9 @@ export class CreateUserDto {
   public email: string;
 
   @IsString()
-  public password: string;
+  public password?: string;
+  @IsString()
+  public roqUserId?: string;
+  @IsString()
+  public type?: string;
 }

@@ -1,17 +1,22 @@
+import { clientConfig } from '../config';
+
 export interface LoginParamsInterface {
-  syncDb?: boolean;
+    syncDb?: boolean;
 }
 
-export const login = (params?: LoginParamsInterface) => {
-  const loginUrl = new URL(
-    process.env.NEXT_PUBLIC_BASE_URL + "/api/auth/login"
-  );
+export const login = async (params?: LoginParamsInterface) => {
+    const loginUrl = new URL(
+        clientConfig.roq.serverUrl + '/api/auth/login'
+    );
 
-  if (params.syncDb) {
-    loginUrl.searchParams.set("sync", "t");
-  }
+    if (params?.syncDb) {
+        loginUrl.searchParams.set('sync', 't');
+    }
 
-  if (typeof window !== "undefined") {
-    window.location.href = loginUrl.toString();
-  }
+    await fetch(loginUrl.toString())
+        .then((res) => res.text())
+
+    if (typeof window !== 'undefined') {
+        window.location.href = loginUrl.toString();
+    }
 };

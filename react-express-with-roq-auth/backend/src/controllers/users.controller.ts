@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { User } from '@prisma/client';
 import { CreateUserDto } from '@dtos/users.dto';
 import userService from '@services/users.service';
+import { roqClient } from '@/roq';
+import AuthController from '@controllers/auth.controller';
 
 class UsersController {
   public userService = new userService();
@@ -18,7 +20,7 @@ class UsersController {
 
   public getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const findOneUserData: User = await this.userService.findUserById(userId);
 
       res.status(200).json({ data: findOneUserData, message: 'findOne' });
@@ -40,7 +42,7 @@ class UsersController {
 
   public updateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const userData: CreateUserDto = req.body;
       const updateUserData: User = await this.userService.updateUser(userId, userData);
 
@@ -52,7 +54,7 @@ class UsersController {
 
   public deleteUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const userId = Number(req.params.id);
+      const userId = req.params.id;
       const deleteUserData: User = await this.userService.deleteUser(userId);
 
       res.status(200).json({ data: deleteUserData, message: 'deleted' });
@@ -60,6 +62,21 @@ class UsersController {
       next(error);
     }
   };
+
+  async welcome(req, res) {
+    const session = AuthController.getSessionData(req);
+    if (!session) {
+      return res.status(401).json({ code: 'Forbidden', message: 'User not logged in' });
+    }
+    const { roqUserId: userId } = session;
+    const response = await roqClient.asSuperAdmin().notify({
+      notification: {
+        key: 'welcome',
+        recipients: { userIds: [userId] },
+      },
+    });
+    res.status(200).json(response);
+  }
 }
 
 export default UsersController;

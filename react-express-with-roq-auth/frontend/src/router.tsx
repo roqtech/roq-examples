@@ -1,38 +1,39 @@
-import { createBrowserRouter } from "react-router-dom";
-import DashboardPage from "pages/dashboard";
-import { routes } from "routes";
-import SimpleAuthPage from "pages/authentication";
-import RegisterWithMetadata from "pages/authentication/register-with-metadata";
-import SaveOnLogin from "pages/authentication/save-user-on-login";
-import InvitesTablePage from "pages/invites";
-import InvitePane from "pages/invites/pane";
-import CustomTheme from "pages/ui/custom-theme";
-import SimpleNotificationsPage from "pages/notifications";
-import NotificationUnreadTab from "pages/notifications/change-default-tab";
-import CustomNotificationIcon from "pages/notifications/custom-icons";
-import WelcomeNotification from "pages/notifications/welcome";
-import ChatPage from "pages/chat/simple";
-import ControlledChatPage from "pages/chat/custom";
-import ChatMessageBellPage from "pages/chat/message-bell";
-import ChatCustomMessageBellPage from "pages/chat/custom-icon";
-import FileUploadPage from "pages/files";
-import FileUpload from "pages/files/controlled-upload";
-import FileUploadDropzone from "pages/files/dropzone";
-import AppLayout from "pages/layout";
-import Login from "pages/auth/login";
+import { createBrowserRouter } from 'react-router-dom';
+import DashboardPage from 'pages/dashboard';
+import { routes } from 'routes';
+import SimpleAuthPage from 'pages/authentication';
+import RegisterWithMetadata from 'pages/authentication/register-with-metadata';
+import SaveOnLogin from 'pages/authentication/save-user-on-login';
+import InvitesTablePage from 'pages/invites';
+import InvitePane from 'pages/invites/pane';
+import CustomTheme from 'pages/ui/custom-theme';
+import SimpleNotificationsPage from 'pages/notifications';
+import NotificationUnreadTab from 'pages/notifications/change-default-tab';
+import CustomNotificationIcon from 'pages/notifications/custom-icons';
+import WelcomeNotification from 'pages/notifications/welcome';
+import ChatPage from 'pages/chat/simple';
+import ControlledChatPage from 'pages/chat/custom';
+import ChatMessageBellPage from 'pages/chat/message-bell';
+import ChatCustomMessageBellPage from 'pages/chat/custom-icon';
+import FileUploadPage from 'pages/files';
+import FileUpload from 'pages/files/controlled-upload';
+import FileUploadDropzone from 'pages/files/dropzone';
+import FileServerSideUpload from 'pages/files/server-side';
+import AppLayout from 'pages/layout';
+import Login from 'pages/auth/login';
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <AppLayout />,
+    path: '/',
+    element: <AppLayout/>,
     children: [
       {
-        path: "/",
-        element: <DashboardPage />,
+        path: '/',
+        element: <DashboardPage/>,
       },
       {
         path: routes.frontend.authentication.home,
-        element: <SimpleAuthPage />,
+        element: <SimpleAuthPage/>,
       },
       {
         path: routes.frontend.authentication.simple,
@@ -64,7 +65,7 @@ const router = createBrowserRouter([
       },
       {
         path: routes.frontend.ui.custom,
-        element: <CustomTheme />,
+        element: <CustomTheme/>,
       },
       {
         path: routes.frontend.notifications.home,
@@ -112,16 +113,20 @@ const router = createBrowserRouter([
       },
       {
         path: routes.frontend.files.upload,
-        element: <FileUploadPage />,
+        element: <FileUploadPage/>,
       },
       {
         path: routes.frontend.files.controlledUpload,
-        element: <FileUpload />,
+        element: <FileUpload/>,
       },
       {
         path: routes.frontend.files.dropdzone,
-        element: <FileUploadDropzone />,
+        element: <FileUploadDropzone/>,
       },
+      {
+        path: routes.frontend.files.serverSide,
+        element: <FileServerSideUpload/>,
+      }
     ],
   },
   {

@@ -1,5 +1,5 @@
-import { clientConfig } from "config";
-import { useEffect, useState } from "react";
+import { clientConfig } from 'config';
+import { useEffect, useState } from 'react';
 
 function Login() {
   const [loginUrl, setLoginUrl] = useState(null);
@@ -7,9 +7,10 @@ function Login() {
 
   useEffect(() => {
     fetch(`${serverUrl}/auth/login`)
-      .then((res) => res.text())
-      .then((data) => {
-        setLoginUrl(data);
+        .then((res) => res.text())
+        .then((data) => {
+          console.log({ data });
+          setLoginUrl(data);
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

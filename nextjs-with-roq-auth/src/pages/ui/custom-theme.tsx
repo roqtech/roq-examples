@@ -1,24 +1,72 @@
-import AppLayout from "layout/app/app.layout";
-import Files from "components/file/files";
-import styles from "pages/dashboard/dashboard.module.css";
-import { requireNextAuth } from "@roq/nextjs";
-import DemoLayout from "layout/demo/demo.layout";
+import AppLayout from 'layout/app/app.layout';
+import DemoLayout from 'layout/demo/demo.layout';
+import styles from 'pages/ui/custom-theme.module.css';
+import palettes from 'pages/ui/palettes-data.json';
+import { ActionTypeEnum, GlobalContext } from 'context';
+import { useCallback, useContext } from 'react';
+import { createCustomTheme } from '@roq/nextjs';
+import { roqThemeLight } from 'styles/roq-theme';
+import { PaletteCard, PaletteInterface } from 'components/palette-card';
 
 function CustomTheme() {
-  return (
-    <AppLayout title="UI" description="Custom Theme">
-      <DemoLayout>
-        <style>
-          {`
-          :root {
-            --roq-color-primary: red !important;
-            --roq-border-radius: 2px !important;
-          }
-        `}
-        </style>
-      </DemoLayout>
-    </AppLayout>
-  );
+    const { state, dispatch } = useContext(GlobalContext);
+
+    const onReset = useCallback(
+        () => {
+            dispatch({
+                type: ActionTypeEnum.UN_SET_CUSTOM_THEME,
+            })
+        },
+        [dispatch],
+    );
+
+    const onSelect = useCallback((palette: PaletteInterface) => {
+        dispatch({
+            type: ActionTypeEnum.SET_CUSTOM_THEME,
+            payload: {
+                theme: createCustomTheme({
+                    ...roqThemeLight,
+                    base: {
+                        ...roqThemeLight.base,
+                        primary: `#${palette.primary.hex}`,
+                        secondary: `#${palette.secondary.hex}`,
+                        border: `#${palette.third.hex}`,
+                        separator: `#${palette.forth.hex}`,
+                    },
+                })
+            }
+        })
+    }, [dispatch]);
+
+    return (
+        <AppLayout title="UI" description="Custom Theme">
+            <DemoLayout>
+                <div className={styles.headRow}>
+                    <div className={styles.headingContainer}>
+                        <h2>Select Palette For Custom Theme</h2>
+                    </div>
+                    <div className={styles.headAction}>
+                        <div
+                            className={styles.button}
+                            data-disabled={!state.theme?.name}
+                            onClick={() => onReset()}
+                        >Reset
+                        </div>
+                    </div>
+                </div>
+                <div className={styles.page}>
+                    <div className={styles.feed}>
+                        {
+                            palettes.map((palette, index) => (
+                                <PaletteCard palette={palette} index={index} key={index} onSelect={onSelect}
+                                             isSelected={state?.theme?.base?.primary === `#${palette.primary.hex}`}/>
+                            ))
+                        }
+                    </div>
+                </div>
+            </DemoLayout>
+        </AppLayout>
+    );
 }
 
 export default CustomTheme;

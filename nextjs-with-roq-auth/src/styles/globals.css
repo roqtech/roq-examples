@@ -94,3 +94,10 @@ a {
   cursor: not-allowed;
   background-color: rgba(var(--primary-color-rgb), 0.5);
 }
+
+pre {
+  background: #2A2C2D;
+  color: #ffffff;
+  padding: 20px 40px;
+  border-radius: 16px;
+}
