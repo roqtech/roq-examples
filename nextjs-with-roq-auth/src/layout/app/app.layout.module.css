@@ -36,6 +36,10 @@
   border-right: 1px solid var(--sidebar-border-color);
 }
 
+.sidebar a {
+  text-decoration: none;
+}
+
 .sidebarHeader {
   height: 40px;
   flex-shrink: 0;
