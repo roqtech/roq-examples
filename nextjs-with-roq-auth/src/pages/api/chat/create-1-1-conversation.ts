@@ -7,7 +7,7 @@ import sampleSize from "lodash/sampleSize";
 import { randomUUID } from "crypto";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "GET") {
+  if (req.method !== "POST") {
     res.status(405).send({ message: "Method not allowed" });
     res.end();
   }
