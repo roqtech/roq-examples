@@ -52,7 +52,7 @@ function ChatPage() {
             Create a group conversation
           </button>
           <button className="btn btn-sm m5" onClick={handleSendSystemMessage}>
-            Send a "system" message
+            Send a system message
           </button>
           <button
             className="btn btn-sm"
