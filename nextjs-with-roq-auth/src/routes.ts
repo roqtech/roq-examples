@@ -28,10 +28,11 @@ export const routes = Object.freeze({
     chat: {
       home: "/chat",
       simple: "/chat/simple",
-      controlled: "/chat/custom",
+      controlled: "/chat/controlled",
       messageBell: "/chat/message-bell",
       customIcon: "/chat/custom-icon",
-      withCallBacks: "/chat/simple-with-callbacks",
+      withCallBacks: "/chat/with-callbacks",
+      serverSideRequests: "/chat/server-side-requests",
     },
     files: {
       home: "/files",
@@ -48,6 +49,13 @@ export const routes = Object.freeze({
     staticFileUpload: "/api/files/upload-static-file",
     userManagement: {
       createUser: "/api/users",
+    },
+    chat: {
+      createPrivateConversation: "/api/chat/create-1-1-conversation",
+      createGroupConversation: "/api/chat/create-group-conversation",
+      sendSystemMessage: "/api/chat/send-system-message",
+      createConversationWithTags: "/api/chat/assign-tags",
+      unassignConversationTags: "/api/chat/unassign-conversation-tags",
     },
   },
 });

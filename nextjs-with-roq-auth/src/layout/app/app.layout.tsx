@@ -1,12 +1,17 @@
-import { ReactNode, useCallback } from 'react';
-import Head from 'next/head';
-import styles from 'layout/app/app.layout.module.css';
-import Image from 'next/image';
-import { ChatMessageBell, NotificationBell, UserAccountDropdown, useSession, } from '@roq/nextjs';
-import { useRouter } from 'next/router';
-import { routes } from 'routes';
+import { ReactNode, useCallback } from "react";
+import Head from "next/head";
+import styles from "layout/app/app.layout.module.css";
+import Image from "next/image";
+import {
+  ChatMessageBell,
+  NotificationBell,
+  UserAccountDropdown,
+  useSession,
+} from "@roq/nextjs";
+import { useRouter } from "next/router";
+import { routes } from "routes";
 
-import Link from 'next/link';
+import Link from "next/link";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -270,26 +275,38 @@ export default function AppLayout({
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.chat.customIcon)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.chat.customIcon}
+                          className={
+                            isRouteActive(routes.frontend.chat.customIcon)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.chat.customIcon}
                         >
                           Custom Icon
                         </Link>
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.chat.withCallBacks)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.chat.withCallBacks}
+                          className={
+                            isRouteActive(routes.frontend.chat.withCallBacks)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.chat.withCallBacks}
                         >
                           Chat (with Callbacks)
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className={
+                            isRouteActive(routes.frontend.chat.withCallBacks)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.chat.serverSideRequests}
+                        >
+                          Chat (with Server side requests)
                         </Link>
                       </li>
                     </ul>
@@ -325,36 +342,38 @@ export default function AppLayout({
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.files.dropdzone)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.files.dropdzone}
+                          className={
+                            isRouteActive(routes.frontend.files.dropdzone)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.files.dropdzone}
                         >
                           File Dropzone
                         </Link>
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.files.dropdzoneWithCallbacks)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.files.dropdzoneWithCallbacks}
+                          className={
+                            isRouteActive(
+                              routes.frontend.files.dropdzoneWithCallbacks
+                            )
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.files.dropdzoneWithCallbacks}
                         >
                           File Dropzone (With Callbacks)
                         </Link>
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.files.serverSide)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.files.serverSide}
+                          className={
+                            isRouteActive(routes.frontend.files.serverSide)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.files.serverSide}
                         >
                           Server Side File Upload
                         </Link>
