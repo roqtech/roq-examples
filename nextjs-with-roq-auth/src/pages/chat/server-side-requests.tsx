@@ -27,6 +27,10 @@ function ChatPage() {
     setTags(defaultTags);
     fetch(routes.server.chat.createConversationWithTags, {
       method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ tags: defaultTags }),
     });
   };
