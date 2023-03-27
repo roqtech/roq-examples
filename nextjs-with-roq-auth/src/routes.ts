@@ -51,11 +51,12 @@ export const routes = Object.freeze({
       createUser: "/api/users",
     },
     chat: {
-      createPrivateConversation: "/api/chat/create-1-1-conversation",
-      createGroupConversation: "/api/chat/create-group-conversation",
-      sendSystemMessage: "/api/chat/send-system-message",
-      createConversationWithTags: "/api/chat/assign-tags",
-      unassignConversationTags: "/api/chat/unassign-conversation-tags",
+      createPrivateConversation: '/api/chat/create-1-1-conversation',
+      createGroupConversation: '/api/chat/create-group-conversation',
+      sendSystemMessage: '/api/chat/send-system-message',
+      createConversationWithTags: '/api/chat/assign-tags',
+      unassignConversationTags: '/api/chat/unassign-conversation-tags',
+      deleteConversation: '/api/chat/delete-conversation',
     },
   },
 });

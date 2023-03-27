@@ -1,14 +1,12 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { withAuth, getServerSession } from "@roq/nextjs";
-import { faker } from "@faker-js/faker";
-import { roqClient } from "server/roq";
-import map from "lodash/map";
-import sampleSize from "lodash/sampleSize";
-import { randomUUID } from "crypto";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession, withAuth } from '@roq/nextjs';
+import { faker } from '@faker-js/faker';
+import { roqClient } from 'server/roq';
+import { randomUUID } from 'crypto';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.status(405).send({ message: "Method not allowed" });
+  if (req.method !== 'POST') {
+    res.status(405).send({ message: 'Method not allowed' });
     res.end();
   }
 
@@ -36,8 +34,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    console.log("TAGS ", req.body.tags);
-
     // Create the conversation
     const conv = await roqClient.asUser(session.roqUserId).createConversation({
       conversation: {
@@ -49,18 +45,17 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    console.log("CONV ", conv);
 
-    const message = await roqClient.asSuperAdmin().createMessage({
+    await roqClient.asSuperAdmin().createMessage({
       message: {
         conversationId: conv.createConversation.id,
-        body: `This conversation has the tags ${req.body.tags?.join(", ")}`,
+        body: `This conversation has the tags ${req.body.tags?.join(', ')}`,
         authorId: user.createUser.id,
         isSystem: true,
       },
     });
 
-    return res.status(200).json({ message });
+    return res.status(200).json({ data: conv });
   } catch (e) {
     console.error(e);
     return res.status(200).json({ success: false });

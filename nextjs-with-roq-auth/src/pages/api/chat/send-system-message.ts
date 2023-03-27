@@ -1,14 +1,13 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { withAuth, getServerSession } from "@roq/nextjs";
-import { faker } from "@faker-js/faker";
-import { roqClient } from "server/roq";
-import map from "lodash/map";
-import sampleSize from "lodash/sampleSize";
-import { randomUUID } from "crypto";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession, withAuth } from '@roq/nextjs';
+import { faker } from '@faker-js/faker';
+import { roqClient } from 'server/roq';
+import sampleSize from 'lodash/sampleSize';
+import { randomUUID } from 'crypto';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.status(405).send({ message: "Method not allowed" });
+  if (req.method !== 'POST') {
+    res.status(405).send({ message: 'Method not allowed' });
     res.end();
   }
 
@@ -53,7 +52,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
-    const message = await roqClient.asSuperAdmin().createMessage({
+    await roqClient.asSuperAdmin().createMessage({
       message: {
         conversationId: conv.createConversation.id,
         body: `#### Hello, my name is ${user.createUser.firstName} ${user.createUser.lastName}. I'm about to process your order.
@@ -68,7 +67,7 @@ Check my [Documentation here](https://docs.roq.tech/)`,
       },
     });
 
-    return res.status(200).json({ message });
+    return res.status(200).json({ data: conv });
   } catch (e) {
     console.error(e);
     return res.status(200).json({ success: false });

@@ -1,29 +1,25 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { withAuth, getServerSession } from "@roq/nextjs";
-import { faker } from "@faker-js/faker";
-import { roqClient } from "server/roq";
-import map from "lodash/map";
-import sampleSize from "lodash/sampleSize";
-import { randomUUID } from "crypto";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession, withAuth } from '@roq/nextjs';
+import { faker } from '@faker-js/faker';
+import { roqClient } from 'server/roq';
+import sampleSize from 'lodash/sampleSize';
+import { randomUUID } from 'crypto';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== "POST") {
-    res.status(405).send({ message: "Method not allowed" });
+  if (req.method !== 'POST') {
+    res.status(405).send({ message: 'Method not allowed' });
     res.end();
   }
-
   const session = getServerSession(req);
-
   if (!session.user) {
     return res.status(200).json({ success: false });
   }
-
   try {
     const users = sampleSize(
-      await (
-        await roqClient.asSuperAdmin().users({ limit: 10 })
-      ).users?.data,
-      5
+        await (
+            await roqClient.asSuperAdmin().users({ limit: 10 })
+        ).users?.data,
+        5
     );
 
     // Create a user to chat with
@@ -60,10 +56,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       },
     });
 
+    const { groupName } = JSON.parse(req?.body);
     // Create the conversation
     const data = await roqClient.asUser(session.roqUserId).createConversation({
       conversation: {
-        title: faker.commerce.department(),
+        title: groupName || faker.commerce.department(),
         ownerId: session.roqUserId,
         isGroup: true, //Group
         memberIds: [

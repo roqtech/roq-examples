@@ -7,7 +7,6 @@ import '@roq/nextjs/index.css';
 import { GlobalProvider } from 'providers';
 import { GlobalContext } from '../context';
 import { PropsWithChildren, useContext } from 'react';
-
 export default function App({ Component, pageProps }: AppProps) {
     return (
         <GlobalProvider>

@@ -1,78 +1,225 @@
-import { useState } from "react";
-import { Chat } from "@roq/nextjs";
-import AppLayout from "layout/app/app.layout";
-import DemoLayout from "layout/demo/demo.layout";
-import { routes } from "routes";
+import { useCallback, useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { Chat } from '@roq/nextjs';
+import AppLayout from 'layout/app/app.layout';
+import DemoLayout from 'layout/demo/demo.layout';
+import { routes } from 'routes';
+
 
 function ChatPage() {
-  const [tags, setTags] = useState<string[] | undefined>();
-  const defaultTags = ["project", "retrospective"];
+  const [tags, setTags] = useState<string[]>(['project', 'retrospective']);
+  const [isTagApplied, setIsTagApplied] = useState(false);
+  const [inEditState, setEditState] = useState<boolean>(false);
+  const [isEditingGroupName, setEditingGroupName] = useState<boolean>(false);
+  const [groupName, setGroupName] = useState<string>('');
+  const [recentConversationId, setRecentConversationId] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+
 
   const handleCreatePrivateConversation = async () => {
-    setTags(undefined);
-    fetch(routes.server.chat.createPrivateConversation, { method: "POST" });
+    setIsTagApplied(false);
+    setLoading(true);
+    try {
+      const response = await fetch(routes.server.chat.createPrivateConversation, { method: 'POST' });
+      toast.success(`Private Conversation Created!`)
+      const { data } = await response.json();
+      setRecentConversationId(data?.createConversation?.id)
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCreateGroupConversation = async () => {
-    setTags(undefined);
-    fetch(routes.server.chat.createGroupConversation, { method: "POST" });
-  };
+  const handleDeleteRecentConversation = useCallback(async () => {
+    try {
+      const response = await fetch(routes.server.chat.deleteConversation, {
+        method: 'POST',
+        body: JSON.stringify({ id: recentConversationId })
+      });
+      await response.json();
+      toast.success(`Conversation Deleted!`);
+      setRecentConversationId('');
+    } finally {
+      setLoading(false);
+    }
+  }, [recentConversationId]);
+
+
+  const handleCreateGroupConversation = useCallback(async () => {
+    setEditingGroupName(false);
+    setIsTagApplied(false);
+    setLoading(true);
+    try {
+      const response = await fetch(routes.server.chat.createGroupConversation, {
+        method: 'POST',
+        body: JSON.stringify({ groupName }),
+      });
+      const { data } = await response.json();
+      toast.success(`Group Conversation Created!`);
+      setRecentConversationId(data?.createConversation?.id)
+      setGroupName('');
+    } finally {
+      setLoading(false);
+    }
+  }, [groupName]);
 
   const handleSendSystemMessage = async () => {
-    setTags(undefined);
-    fetch(routes.server.chat.sendSystemMessage, { method: "POST" });
+    setIsTagApplied(false);
+    setLoading(true);
+    try {
+      const response = await fetch(routes.server.chat.sendSystemMessage, { method: 'POST' });
+      const { data } = await response.json();
+      toast.success(`Conversation with System Bot Created!`);
+      setRecentConversationId(data?.createConversation?.id)
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCreateConversationWithTags = async () => {
-    setTags(defaultTags);
-    fetch(routes.server.chat.createConversationWithTags, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ tags: defaultTags }),
-    });
-  };
+  const handleCreateConversationWithTags = useCallback(
+      async () => {
+        setIsTagApplied(true);
+        setLoading(true);
+        try {
+          const response = await fetch(routes.server.chat.createConversationWithTags, {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ tags }),
+          });
+          const { data } = await response.json();
+          toast.success(`Tagged Conversation Created!`);
+          setRecentConversationId(data?.createConversation?.id)
+        } finally {
+          setLoading(false);
+        }
+      }, [tags]);
 
   return (
-    <AppLayout>
-      <DemoLayout>
-        <div className="m5">
-          <button
-            className="btn btn-sm m5"
-            onClick={handleCreatePrivateConversation}
-          >
-            Create a 1:1 conversation
-          </button>
-          <button
-            className="btn btn-sm m5"
-            onClick={handleCreateGroupConversation}
-          >
-            Create a group conversation
-          </button>
-          <button className="btn btn-sm m5" onClick={handleSendSystemMessage}>
-            Send a system message
-          </button>
-          <button
-            className="btn btn-sm"
-            onClick={handleCreateConversationWithTags}
-          >
-            Create a conversation with tags {JSON.stringify(defaultTags)}
-          </button>
-        </div>
+      <AppLayout>
+        <DemoLayout>
+          <div className="m5 flex space-between">
+            <div className="flex">
+              <button
+                  className="btn btn-sm m5"
+                  onClick={handleCreatePrivateConversation}
+                  disabled={loading}
+              >
+                Create a 1:1 conversation
+              </button>
+              {
+                  isEditingGroupName && (
+                      <div className="flex">
+                        <div className="flex w-100">
+                          <input
+                              value={groupName}
+                              className="input w-100"
+                              type="text"
+                              disabled={loading}
+                              placeholder="Name of group to be created"
+                              onChange={({ target }) => setGroupName(target.value)}
+                          />
+                        </div>
+                        <div className="flex w-100">
+                          <button
+                              className="btn btn-sm m5 btn-danger"
+                              onClick={() => setEditingGroupName(false)}
+                          >
+                            Cancel
+                          </button>
+                          <button
+                              className="btn btn-sm m5"
+                              onClick={handleCreateGroupConversation}
+                          >
+                            Create
+                          </button>
+                        </div>
+                      </div>
+                  )
+              }
+              {
+                  !isEditingGroupName && (
+                      <button
+                          className="btn btn-sm m5"
+                          onClick={() => setEditingGroupName(true)}
+                          // onClick={}
+                          disabled={loading}
+                      >
+                        Create a group conversation
+                      </button>
+                  )
+              }
+              <button className="btn btn-sm m5" onClick={handleSendSystemMessage}
+                      disabled={loading}
 
-        {tags?.length ? (
-          <h3>Showing conversations with tags {JSON.stringify(defaultTags)}</h3>
-        ) : (
-          <></>
-        )}
+              >
+                Send a &quot;system&quot; message
+              </button>
+              <button
+                  className="btn btn-sm m5"
+                  onClick={handleCreateConversationWithTags}
+                  disabled={loading}
+              >
+                Create a conversation with tags {JSON.stringify(tags)}
+              </button>
 
-        <div style={{ flex: 1, height: "80vh" }}>
-          <Chat fluid={true} tags={tags} />
-        </div>
-      </DemoLayout>
-    </AppLayout>
+              {
+                inEditState ? (
+                    <>
+                      <input
+                          value={tags?.join(', ')}
+                          className="input"
+                          type="text"
+                          placeholder="Comma separated list of tags"
+                          onChange={({ target }) => setTags(target?.value?.split(',') || [])}
+                      />
+                      <button
+                          className="btn btn-sm"
+                          onClick={() => {
+                            setEditState(false);
+                          }}
+                      >
+                        Save
+                      </button>
+                    </>
+                ) : (
+                    <button
+                        className="btn btn-sm m5"
+                        onClick={() => setEditState(true)}
+                    >
+                      Edit Tags
+                    </button>
+                )
+              }
+              <button
+                  className="btn btn-sm m5"
+                  onClick={() => setIsTagApplied((val)=>!val)}
+              >
+                {isTagApplied ? 'Reset Tag Filter' : 'Filter By Tags' }
+              </button>
+            </div>
+            <div className="flex actions">
+              <button
+                  className="btn btn-sm btn-danger m5"
+                  disabled={loading || !recentConversationId}
+                  onClick={handleDeleteRecentConversation}
+              >
+                Delete recently created conversation
+              </button>
+            </div>
+          </div>
+          {isTagApplied ? (
+              <h3>Showing conversations with tags {JSON.stringify(tags)}</h3>
+          ) : (
+              <></>
+          )}
+
+          <div style={{ flex: 1, height: '80vh' }}>
+            <Chat fluid={true} tags={isTagApplied ? tags : undefined}/>
+          </div>
+        </DemoLayout>
+      </AppLayout>
   );
 }
 
