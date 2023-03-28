@@ -99,115 +99,110 @@ function ChatPage() {
   return (
       <AppLayout>
         <DemoLayout>
-          <div className="m5 flex space-between">
-            <div className="flex">
-              <button
-                  className="btn btn-sm m5"
-                  onClick={handleCreatePrivateConversation}
-                  disabled={loading}
-              >
-                Create a 1:1 conversation
-              </button>
-              {
-                  isEditingGroupName && (
-                      <div className="flex">
-                        <div className="flex w-100">
-                          <input
-                              value={groupName}
-                              className="input w-100"
-                              type="text"
-                              disabled={loading}
-                              placeholder="Name of group to be created"
-                              onChange={({ target }) => setGroupName(target.value)}
-                          />
-                        </div>
-                        <div className="flex w-100">
-                          <button
-                              className="btn btn-sm m5 btn-danger"
-                              onClick={() => setEditingGroupName(false)}
-                          >
-                            Cancel
-                          </button>
-                          <button
-                              className="btn btn-sm m5"
-                              onClick={handleCreateGroupConversation}
-                          >
-                            Create
-                          </button>
-                        </div>
+          <div className="m5 flex flex-wrap">
+            <button
+                className="btn btn-sm m5"
+                onClick={handleCreatePrivateConversation}
+                disabled={loading}
+            >
+              Create a 1:1 conversation
+            </button>
+            {
+                isEditingGroupName && (
+                    <div className="flex">
+                      <div className="flex w-100">
+                        <input
+                            value={groupName}
+                            className="input w-100"
+                            type="text"
+                            disabled={loading}
+                            placeholder="Name of group to be created"
+                            onChange={({ target }) => setGroupName(target.value)}
+                        />
                       </div>
-                  )
-              }
-              {
-                  !isEditingGroupName && (
-                      <button
-                          className="btn btn-sm m5"
-                          onClick={() => setEditingGroupName(true)}
-                          // onClick={}
-                          disabled={loading}
-                      >
-                        Create a group conversation
-                      </button>
-                  )
-              }
-              <button className="btn btn-sm m5" onClick={handleSendSystemMessage}
-                      disabled={loading}
-
-              >
-                Send a &quot;system&quot; message
-              </button>
-              <button
-                  className="btn btn-sm m5"
-                  onClick={handleCreateConversationWithTags}
-                  disabled={loading}
-              >
-                Create a conversation with tags {JSON.stringify(tags)}
-              </button>
-
-              {
-                inEditState ? (
-                    <>
-                      <input
-                          value={tags?.join(', ')}
-                          className="input"
-                          type="text"
-                          placeholder="Comma separated list of tags"
-                          onChange={({ target }) => setTags(target?.value?.split(',') || [])}
-                      />
-                      <button
-                          className="btn btn-sm"
-                          onClick={() => {
-                            setEditState(false);
-                          }}
-                      >
-                        Save
-                      </button>
-                    </>
-                ) : (
+                      <div className="flex w-100">
+                        <button
+                            className="btn btn-sm m5 btn-danger"
+                            onClick={() => setEditingGroupName(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                            className="btn btn-sm m5"
+                            onClick={handleCreateGroupConversation}
+                        >
+                          Create
+                        </button>
+                      </div>
+                    </div>
+                )
+            }
+            {
+                !isEditingGroupName && (
                     <button
                         className="btn btn-sm m5"
-                        onClick={() => setEditState(true)}
+                        onClick={() => setEditingGroupName(true)}
+                        // onClick={}
+                        disabled={loading}
                     >
-                      Edit Tags
+                      Create a group conversation
                     </button>
                 )
-              }
-              <button
-                  className="btn btn-sm m5"
-                  onClick={() => setIsTagApplied((val)=>!val)}
-              >
-                {isTagApplied ? 'Reset Tag Filter' : 'Filter By Tags' }
-              </button>
-            </div>
-            <div className="flex actions">
-              <button
-                  className="btn btn-sm btn-danger m5"
-                  disabled={loading || !recentConversationId}
-                  onClick={handleDeleteRecentConversation}
-              >
-                Delete recently created conversation
-              </button>
-            </div>
+            }
+            <button className="btn btn-sm m5" onClick={handleSendSystemMessage}
+                    disabled={loading}
+
+            >
+              Send a &quot;system&quot; message
+            </button>
+            <button
+                className="btn btn-sm m5"
+                onClick={handleCreateConversationWithTags}
+                disabled={loading}
+            >
+              Create a conversation with tags {JSON.stringify(tags)}
+            </button>
+            {
+              inEditState ? (
+                  <>
+                    <input
+                        value={tags?.join(', ')}
+                        className="input"
+                        type="text"
+                        placeholder="Comma separated list of tags"
+                        onChange={({ target }) => setTags(target?.value?.split(',') || [])}
+                    />
+                    <button
+                        className="btn btn-sm"
+                        onClick={() => {
+                          setEditState(false);
+                        }}
+                    >
+                      Save
+                    </button>
+                  </>
+              ) : (
+                  <button
+                      className="btn btn-sm m5"
+                      onClick={() => setEditState(true)}
+                  >
+                    Edit Tags
+                  </button>
+              )
+            }
+            <button
+                className="btn btn-sm m5"
+                onClick={() => setIsTagApplied((val) => !val)}
+            >
+              {isTagApplied ? 'Reset Tag Filter' : 'Filter By Tags'}
+            </button>
+            <button
+                className="btn btn-sm btn-danger m5"
+                disabled={loading || !recentConversationId}
+                onClick={handleDeleteRecentConversation}
+            >
+              Delete Conversation
+            </button>
           </div>
           {isTagApplied ? (
               <h3>Showing conversations with tags {JSON.stringify(tags)}</h3>
