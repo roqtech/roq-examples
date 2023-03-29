@@ -1,17 +1,12 @@
-import { ReactNode, useCallback } from "react";
-import Head from "next/head";
-import styles from "layout/app/app.layout.module.css";
-import Image from "next/image";
-import {
-  ChatMessageBell,
-  NotificationBell,
-  UserAccountDropdown,
-  useSession,
-} from "@roq/nextjs";
-import { useRouter } from "next/router";
-import { routes } from "routes";
-
-import Link from "next/link";
+import { ReactNode, useCallback } from 'react';
+import Head from 'next/head';
+import styles from 'layout/app/app.layout.module.css';
+import Image from 'next/image';
+import { ChatMessageBell, NotificationBell, signOut, UserAccountDropdown, useSession, } from '@roq/nextjs';
+import { useRouter } from 'next/router';
+import { routes } from 'routes';
+import { toast } from 'react-hot-toast';
+import Link from 'next/link';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -370,12 +365,29 @@ export default function AppLayout({
                         <Link
                           className={
                             isRouteActive(routes.frontend.files.serverSide)
-                              ? styles.sidebarNavigationLinkActive
-                              : ""
+                                ? styles.sidebarNavigationLinkActive
+                                : ''
                           }
                           href={routes.frontend.files.serverSide}
                         >
                           Server Side File Upload
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <span>User Profile</span>
+                    <ul>
+                      <li>
+                        <Link
+                            className={
+                              isRouteActive(routes.frontend.profile.home)
+                                  ? styles.sidebarNavigationLinkActive
+                                  : ''
+                            }
+                            href={routes.frontend.profile.home}
+                        >
+                          Profile
                         </Link>
                       </li>
                     </ul>
@@ -402,10 +414,16 @@ export default function AppLayout({
                       <NotificationBell />
                     </li>
                     <li>
-                      <ChatMessageBell onClick={() => router.push("/chat")} />
+                      <ChatMessageBell onClick={() => router.push('/chat')}/>
                     </li>
                     <li>
-                      <UserAccountDropdown />
+                      <UserAccountDropdown
+                          onSignOut={async () => {
+                            await signOut();
+                            toast.success('Signed out!');
+                            await router.push(routes.frontend.authentication.simple);
+                          }}
+                      />
                     </li>
                   </>
                 )}

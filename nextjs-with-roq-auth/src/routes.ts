@@ -26,22 +26,25 @@ export const routes = Object.freeze({
       welcome: "/notifications/welcome",
     },
     chat: {
-      home: "/chat",
-      simple: "/chat/simple",
-      controlled: "/chat/controlled",
-      messageBell: "/chat/message-bell",
-      customIcon: "/chat/custom-icon",
-      withCallBacks: "/chat/with-callbacks",
-      serverSideRequests: "/chat/server-side-requests",
+      home: '/chat',
+      simple: '/chat/simple',
+      controlled: '/chat/controlled',
+      messageBell: '/chat/message-bell',
+      customIcon: '/chat/custom-icon',
+      withCallBacks: '/chat/with-callbacks',
+      serverSideRequests: '/chat/server-side-requests',
     },
     files: {
-      home: "/files",
-      upload: "/files/upload",
-      controlledUpload: "/files/controlled-upload",
-      dropdzone: "/files/dropzone",
-      dropdzoneWithCallbacks: "/files/dropzone-with-callbacks",
-      serverSide: "/files/server-side",
+      home: '/files',
+      upload: '/files/upload',
+      controlledUpload: '/files/controlled-upload',
+      dropdzone: '/files/dropzone',
+      dropdzoneWithCallbacks: '/files/dropzone-with-callbacks',
+      serverSide: '/files/server-side',
     },
+    profile: {
+      home: '/profile'
+    }
   },
   server: {
     files: "/api/files",
