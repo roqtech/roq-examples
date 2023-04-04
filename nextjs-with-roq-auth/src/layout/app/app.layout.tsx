@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import Head from 'next/head';
 import styles from 'layout/app/app.layout.module.css';
 import Image from 'next/image';
@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { routes } from 'routes';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import { MenuIcon } from '../../components/icons/menu.icon';
+import { CollapseIcon } from 'components/icons/collapse.icon';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -27,6 +29,7 @@ export default function AppLayout({
   description,
 }: AppLayoutProps) {
   const router = useRouter();
+  const [isOpen, setOpen] = useState(true);
   const { session, status } = useSession();
   {
     /*
@@ -43,23 +46,27 @@ export default function AppLayout({
     <>
       <Head>
         <title>ROQ Next.js Kickstarter</title>
-        <meta name="description" content="ROQ Kickstarter with Next.js" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="ROQ Kickstarter with Next.js"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="icon" href="/favicon.ico"/>
       </Head>
       <div className={styles.app}>
         <section className={styles.container}>
-          <aside className={styles.sidebar}>
+          <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
             <div className={styles.sidebarHeader}>
-              <Link href={"/"} role="presentation" className={styles.brand}>
+              <Link href={'/'} role="presentation" className={styles.brand}>
                 <Image
-                  src="/brand.svg"
-                  alt="ROQ Logo"
-                  width={80}
-                  height={40}
-                  priority
+                    src="/brand.svg"
+                    alt="ROQ Logo"
+                    width={80}
+                    height={40}
+                    priority
                 />
               </Link>
+              <CollapseIcon
+                  className={`${styles.sidebarToggle} ${styles.sidebarToggleArrow}`}
+                  onClick={() => setOpen((v) => !v)}
+              />
             </div>
             <div className={styles.sidebarContent}>
               <nav className={styles.sidebarNavigation}>
@@ -69,7 +76,7 @@ export default function AppLayout({
                     <ul>
                       <li>
                         <Link
-                          className={
+                            className={
                             isRouteActive(routes.frontend.authentication.simple)
                               ? styles.sidebarNavigationLinkActive
                               : ""
@@ -395,37 +402,36 @@ export default function AppLayout({
                 </ul>
               </nav>
             </div>
-            {status === "authenticated" && (
-              <div className={styles.sidebarFooter}>
-                <p className={styles.userEmail}>
-                  👋 Hello {session?.user?.email}
-                </p>
-              </div>
+            {status === 'authenticated' && (
+                <div className={styles.sidebarFooter}>
+                  <p className={styles.userEmail}>
+                    👋 Hello {session?.user?.email}
+                  </p>
+                </div>
             )}
           </aside>
-
-          {/*  */}
-          <section className={styles.content}>
+          <section className={`${styles.content} ${isOpen ? styles.contentWithSidebar : ''}`}>
             <nav className={styles.globalNavigation}>
+              <MenuIcon className={styles.sidebarToggle} onClick={() => setOpen((v) => !v)}/>
               <ul className={styles.globalNavigationList}>
-                {status === "authenticated" && (
-                  <>
-                    <li>
-                      <NotificationBell />
-                    </li>
-                    <li>
-                      <ChatMessageBell onClick={() => router.push('/chat')}/>
-                    </li>
-                    <li>
-                      <UserAccountDropdown
-                          onSignOut={async () => {
-                            await signOut();
-                            toast.success('Signed out!');
-                            await router.push(routes.frontend.authentication.simple);
-                          }}
-                      />
-                    </li>
-                  </>
+                {status === 'authenticated' && (
+                    <>
+                      <li>
+                        <NotificationBell/>
+                      </li>
+                      <li>
+                        <ChatMessageBell onClick={() => router.push('/chat')}/>
+                      </li>
+                      <li>
+                        <UserAccountDropdown
+                            onSignOut={async () => {
+                              await signOut();
+                              toast.success('Signed out!');
+                              await router.push(routes.frontend.authentication.simple);
+                            }}
+                        />
+                      </li>
+                    </>
                 )}
               </ul>
             </nav>

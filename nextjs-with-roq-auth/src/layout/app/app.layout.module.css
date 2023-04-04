@@ -20,6 +20,7 @@
 }
 
 .sidebar {
+  z-index: 1;
   display: flex;
   gap: 12px;
   flex-direction: column;
@@ -34,6 +35,23 @@
   padding: var(--sidebar-padding);
   background-color: var(--sidebar-background-color);
   border-right: 1px solid var(--sidebar-border-color);
+
+  transition: transform 0.3s ease-in-out;
+  transform: translateX(calc(-1 * var(--sidebar-width)));
+}
+
+.sidebarToggle {
+  margin: 10px 20px;
+  cursor: pointer;
+}
+
+.sidebarToggleArrow {
+  display: none
+}
+
+
+.sidebarOpen {
+  transform: translateX(0);
 }
 
 .sidebar a {
@@ -43,6 +61,9 @@
 .sidebarHeader {
   height: 40px;
   flex-shrink: 0;
+  justify-content: space-between;
+  display: flex;
+  margin: 10px 2px;
 }
 
 .sidebarContent {
@@ -114,8 +135,14 @@
 .content {
   flex-grow: 1;
   min-width: 0px;
+  width: 100%;
   background-color: var(--content-background-color);
+  transition: width 0.3s ease-in-out;
+}
+
+.contentWithSidebar {
   margin-left: var(--sidebar-width);
+  /*width: calc(100% - var(--sidebar-width));*/
 }
 
 .main {
@@ -163,7 +190,7 @@
 
 .globalNavigation {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   width: 100%;
 }
 
@@ -174,4 +201,24 @@
   gap: 12px;
   padding: 0;
   margin: 0 15px;
+}
+
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .sidebarToggleArrow {
+    display: flex;
+  }
 }
