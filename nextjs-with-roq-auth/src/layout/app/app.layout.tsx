@@ -130,6 +130,20 @@ export default function AppLayout({
                           Create user programmatically
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          className={
+                            isRouteActive(
+                              routes.frontend.authentication.formVariant
+                            )
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.authentication.formVariant}
+                        >
+                          Authentication Form Variants
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                   <li>

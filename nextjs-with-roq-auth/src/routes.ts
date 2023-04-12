@@ -5,6 +5,7 @@ export const routes = Object.freeze({
       simple: "/authentication/simple",
       registerWithMetadata: "/authentication/register-with-metadata",
       saveUserOnLogin: "/authentication/save-user-on-login",
+      formVariant: "/authentication/form-variant",
     },
     userManagement: {
       createUser: "/users/create-user-programmatically",
