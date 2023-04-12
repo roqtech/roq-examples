@@ -33,6 +33,7 @@ export const routes = Object.freeze({
       customIcon: '/chat/custom-icon',
       withCallBacks: '/chat/with-callbacks',
       serverSideRequests: '/chat/server-side-requests',
+      fetchConversation: '/chat/fetch-conversation'
     },
     files: {
       home: '/files',
@@ -40,18 +41,20 @@ export const routes = Object.freeze({
       controlledUpload: '/files/controlled-upload',
       dropdzone: '/files/dropzone',
       dropdzoneWithCallbacks: '/files/dropzone-with-callbacks',
-      serverSide: '/files/server-side',
+      serverSide: '/files/server-side'
     },
     profile: {
       home: '/profile'
     }
   },
   server: {
-    files: "/api/files",
-    welcome: "/api/welcome",
-    staticFileUpload: "/api/files/upload-static-file",
+    files: '/api/files',
+    fileAssociations: '/api/files/associations',
+    createFileAssociation: '/api/files/create-file-association',
+    welcome: '/api/welcome',
+    staticFileUpload: '/api/files/upload-static-file',
     userManagement: {
-      createUser: "/api/users",
+      createUser: '/api/users',
     },
     chat: {
       createPrivateConversation: '/api/chat/create-1-1-conversation',

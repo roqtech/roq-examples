@@ -301,14 +301,26 @@ export default function AppLayout({
                       </li>
                       <li>
                         <Link
-                          className={
-                            isRouteActive(routes.frontend.chat.withCallBacks)
-                              ? styles.sidebarNavigationLinkActive
-                              : ""
-                          }
-                          href={routes.frontend.chat.serverSideRequests}
+                            className={
+                              isRouteActive(routes.frontend.chat.withCallBacks)
+                                  ? styles.sidebarNavigationLinkActive
+                                  : ''
+                            }
+                            href={routes.frontend.chat.serverSideRequests}
                         >
                           Chat (with Server side requests)
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                            className={
+                              isRouteActive(routes.frontend.chat.fetchConversation)
+                                  ? styles.sidebarNavigationLinkActive
+                                  : ''
+                            }
+                            href={routes.frontend.chat.fetchConversation}
+                        >
+                          Create & Fetch Conversation with Users
                         </Link>
                       </li>
                     </ul>
