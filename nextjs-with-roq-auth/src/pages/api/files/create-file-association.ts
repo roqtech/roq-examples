@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { join } from 'path';
-import { FileService } from 'server/services/file.service';
 import { getServerSession, withAuth } from '@roq/nextjs';
+import { roqClient } from '../../../server/roq';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== 'POST') {
@@ -11,12 +10,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     const session = getServerSession(req, res);
     try {
         const { roqUserId: userId } = session;
-        const { fileUploadResponse } = await FileService.uploadStaticFile(join(__dirname, '../../../../../', 'public/brand-big.svg'), userId);
-        const { file } = await FileService.file(userId, fileUploadResponse.id);
-        res.status(200).json(file);
+        const { fileId, entityName, entityReference } = JSON.parse(req.body);
+        await roqClient.asUser(userId).createFileAssociation({
+            createFileAssociationDto: {
+                fileId,
+                entityName,
+                entityReference
+            }
+        })
+        res.status(200).json({ success: true });
     } catch (e) {
         console.error(e);
-        res.status(200).json({ files: [], totalCount: 0 });
+        res.status(200).json({ success: false });
     }
 }
 

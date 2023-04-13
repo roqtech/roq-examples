@@ -141,6 +141,10 @@ pre {
   width: 100%;
 }
 
+.w-50{
+  width: 100%;
+}
+
 .flex-end {
   justify-content: flex-end;
 }

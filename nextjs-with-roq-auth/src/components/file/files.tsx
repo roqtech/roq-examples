@@ -4,23 +4,56 @@ import Card from 'components/card';
 import UploadFile from 'components/file/upload-file';
 import { useSession } from '@roq/nextjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import useSWR from 'swr/mutation';
-import Select from 'react-select';
+import useSWRMutation from 'swr/mutation';
+import useSWR from 'swr'
 import FileCard from './file-card';
 import { fileCategoriesQuery, filesQuery } from '../../graphql/queries';
 import { graphqlRequest } from '../../utils/graphql-request.util';
 import { UserFile } from './types';
+import { SelectFilter } from './select.filter';
+import { routes } from '../../routes';
+import { FileInterface } from '@roq/ui-react/dist/features';
 
+type OptionType = { label: string, value: string };
+const fetcher = (url: string, options: RequestInit) => fetch(url, options).then((res) => res?.json())
 export default function Files() {
     const { session } = useSession();
-    const [fileCategory, setFileCategory] = useState<{ label: string, value: string }>();
+    const [fileCategory, setFileCategory] = useState<OptionType>();
+    const [selectedAssociationFilter, setSelectedAssociationFilter] = useState<OptionType>();
+    const [selectedAssociation, setSelectedAssociation] = useState<OptionType>();
+    const { data: fileAssociationsData } = useSWR(routes.server.fileAssociations, fetcher);
+    const { trigger: createFileAssociation } = useSWRMutation(routes.server.createFileAssociation,
+        function <T>(url: string, { arg }: { arg: T }) {
+            return fetcher(url, {
+                method: 'POST',
+                body: JSON.stringify(arg)
+            })
+        });
     const [filesVars, setFilesVars] = useState<{ limit?: number, offset?: number, filter?: Record<string, unknown> }>({
         filter: {},
     });
-    const { data: files, error, isMutating: isLoading, trigger: fetchFiles, reset } = useSWR(
-        'file',
-        graphqlRequest);
-    const { data: fileCategories, trigger: fetchFileCategories } = useSWR('fileCategories', graphqlRequest)
+    const {
+        data: files,
+        error,
+        isMutating: isLoading,
+        trigger: fetchFiles,
+        reset,
+    } = useSWRMutation('file', graphqlRequest);
+
+    const { data: fileCategories, trigger: fetchFileCategories } = useSWRMutation('fileCategories', graphqlRequest)
+
+
+    const triggerFetchFiles = useCallback(
+        () => {
+            return fetchFiles({
+                query: filesQuery,
+                responseKey: 'files',
+                variables: filesVars,
+                accessToken: session?.roqAccessToken,
+            })
+        },
+        [filesVars, session],
+    );
 
     useEffect(() => {
         if (!session?.roqAccessToken) {
@@ -39,22 +72,39 @@ export default function Files() {
     }, [session])
 
     useEffect(() => {
-        void fetchFiles({
-            query: filesQuery,
-            responseKey: 'files',
-            variables: filesVars,
-            accessToken: session?.roqAccessToken,
-        })
+        if (!session?.roqAccessToken) {
+            return;
+        }
+        void triggerFetchFiles();
     }, [filesVars])
 
 
     const onOptionChange = useCallback(
-        (value: { value: string, label: string }) => {
-            setFileCategory(value);
+        (newVal: unknown) => {
+            const option = newVal as OptionType;
+            const { value } = option;
+            setFileCategory(option);
+            setSelectedAssociationFilter(null);
             setFilesVars((vars) => ({
                 ...vars,
-                filter: value?.value !== 'ALL' ? {
-                    fileCategory: { equalTo: value?.value as string }
+                filter: value !== 'ALL' ? {
+                    fileCategory: { equalTo: value as string }
+                } : {}
+            }));
+        }, []);
+
+    const onAssociationChange = useCallback(
+        (newVal: unknown) => {
+            const option = newVal as OptionType;
+            setSelectedAssociationFilter(option);
+            if (option) {
+                setFileCategory(null);
+            }
+            setFilesVars((vars) => ({
+                ...vars,
+                filter: option ? {
+                    entityName: { equalTo: option.label },
+                    entityReferences: { equalTo: option.value },
                 } : {}
             }));
         }, []);
@@ -67,21 +117,6 @@ export default function Files() {
             }));
         }, [],
     );
-
-    const onSearch = useCallback(
-        (e: any) => {
-            e.preventDefault();
-            const [{ value: entityName }, { value: entityIdentifier }] = e.target.children;
-            setFilesVars((vars) => ({
-                ...vars,
-                filter: {
-                    entityName: { equalTo: entityName },
-                    entityReferences: { equalTo: entityIdentifier },
-                },
-            }));
-        }, [],
-    );
-
 
     const options = useMemo(() => {
         const optionsList = fileCategories?.data
@@ -101,55 +136,68 @@ export default function Files() {
         return optionsList;
     }, [fileCategories]);
 
+    const fileAssociationOptions: OptionType[] = useMemo(() => {
+        return fileAssociationsData?.data
+            ?.map((
+                { entityName: label, entityReference: value }:
+                    { entityName: string, entityReference: string }
+            ) => ({
+                label,
+                value
+            }));
+    }, [fileAssociationsData]);
+
+    const onSuccess = useCallback(
+        async (file: FileInterface) => {
+            await createFileAssociation({
+                fileId: file.id,
+                entityName: selectedAssociation.label,
+                entityReference: selectedAssociation.value,
+            })
+            reset();
+            return triggerFetchFiles();
+        }, [createFileAssociation, selectedAssociation, reset, triggerFetchFiles],
+    );
+
+
     return (
         <div className={styles.feed}>
             <div className={styles.uploadContainer}>
                 <Card>
+                    <div className="flex w-50 flex-center m5">
+                        <SelectFilter
+                            value={selectedAssociation}
+                            onChange={(v) => setSelectedAssociation(v as OptionType)}
+                            options={fileAssociationOptions}
+                            placeholder="Upload with Associations"
+                            isClearable={true}
+                            prefix="Upload with"
+                        />
+                    </div>
                     <UploadFile
-                        onSuccess={reset}
+                        onSuccess={onSuccess}
                         onDelete={reset}
                     />
                 </Card>
             </div>
             <div className="flex w-100 space-between m5">
                 <div className="flex">
-                    <form className="p0 m0" onSubmit={onSearch}>
-                        <input name="entityName" required type="text" className="input m5 mt-10"
-                               placeholder="Entity Name"/>
-                        <input name="entityIdentifier" required type="text" className="input m5 mt-10"
-                               placeholder="Entity Identifier"/>
-                        <button className="btn btn-sm mt-10" type="submit">Search</button>
-                    </form>
+                    <SelectFilter
+                        value={selectedAssociationFilter}
+                        onChange={onAssociationChange}
+                        options={fileAssociationOptions}
+                        placeholder="Filter by Associations"
+                        isClearable={true}
+                        prefix="Filter by"
+                    />
                 </div>
                 <div className="flex">
-                    <Select
+                    <SelectFilter
                         value={fileCategory}
                         onChange={onOptionChange}
-                        isClearable={false}
-                        isSearchable={false}
-                        isLoading={false}
                         options={options}
-                        placeholder="Filter by File category"
-                        styles={{
-                            container: (curr) => ({
-                                ...curr,
-                                minWidth: '200px',
-                            }),
-                            singleValue: (curr) => ({
-                                ...curr,
-                                '::before': {
-                                    content: '"Filter By "'
-                                }
-                            }),
-                            control: (cur, state) => ({
-                                ...cur,
-                                cursor: 'pointer',
-                                border: 'none',
-                                borderColor: state.menuIsOpen ? 'var(--roq-user-invite-role-dropdown-boxShadow)' : '',
-                                boxShadow: state.menuIsOpen ? '0 0 0 1px var(--roq-user-invite-role-dropdown-boxShadow)' : 'none',
-                            }),
-                        }}
-                        components={{ IndicatorSeparator: () => null }}
+                        placeholder="Filter by File Category"
+                        prefix="Filter by"
                     />
                 </div>
             </div>

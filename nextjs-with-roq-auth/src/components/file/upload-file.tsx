@@ -3,27 +3,30 @@
   i.e You can manually preview and trigger the upload of the file after it is selected
 */
 
-import React, { useState } from "react";
-import styles from "components/file/upload-file.module.css";
-import { useRoqFileUploader, FileUpload } from "@roq/nextjs";
+import React, { useState } from 'react';
+import styles from 'components/file/upload-file.module.css';
+import { FileUpload, useRoqFileUploader } from '@roq/nextjs';
+import { FileInterface } from '@roq/ui-react/dist/features';
+import { toast } from 'react-hot-toast';
 
 interface UploadFileProps {
-  onSuccess?: (file: File) => void;
+  onSuccess?: (file: FileInterface) => void;
   onDelete?: (id: string) => void;
 }
 
 export default function UploadFile({ onSuccess, onDelete }: UploadFileProps) {
-  const [newFile, setNewFile] = useState<File>();
+  const [newFile, setNewFile] = useState<FileInterface | File>();
 
   // To control the file upload - i.e trigger the upload when required,
   // you can use this hook to get the fileUploader object
   const fileUploader = useRoqFileUploader({
     onUploadSuccess: (file) => {
-      onSuccess?.(file as unknown as File); // TODO: fix interface
+      onSuccess?.(file);
       setNewFile(undefined);
     },
     onUploadFail: (err) => {
       console.error(err);
+      toast.error('File Upload Failed');
     },
     onChange: ([file]) => {
       setNewFile(file);
@@ -34,8 +37,8 @@ export default function UploadFile({ onSuccess, onDelete }: UploadFileProps) {
 
   // Trigger the upload manually, by calling the uploadFile function
   const handleUpload = async () => {
-    fileUploader.uploadFile({
-      file: newFile,
+    return fileUploader.uploadFile({
+      file: newFile as File,
       temporaryId: Date.now().toString(),
     });
   };

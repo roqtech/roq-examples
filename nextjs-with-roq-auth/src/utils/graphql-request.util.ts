@@ -8,6 +8,10 @@ type GraphqlRequestArg<T> = {
 }
 export const graphqlRequest = <T>(_: string, { arg }: { arg: GraphqlRequestArg<T> }) => {
     const { variables, query, accessToken, responseKey } = arg;
+    if (!accessToken) {
+        console.warn('GraphQL request was initiated without accessToken');
+        return Promise.resolve(undefined);
+    }
     return fetch(`${clientConfig.roq.platformURL}/v01/graphql`,
         {
             method: 'POST',
