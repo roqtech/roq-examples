@@ -4,7 +4,6 @@ import { UserFile } from "components/file/types";
 
 export default function FileCard({ file }: { file: UserFile }) {
   const { name, url, createdAt, createdByUser } = file;
-
   const userName = createdByUser?.firstName || "Anonymous";
 
   return (
