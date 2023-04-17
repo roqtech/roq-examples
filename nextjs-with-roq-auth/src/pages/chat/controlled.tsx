@@ -16,7 +16,7 @@ function ControlledChatPafge() {
       return;
     }
 
-    router.push(`/chat/custom?cid=${cid}`, `/chat/custom?cid=${cid}`, { shallow: true })
+    router.push(`/chat/controlled?cid=${cid}`, `/chat/controlled?cid=${cid}`, { shallow: true })
   }, [router])
 
   const generateConversationLink = useCallback(({ id }: { id: string }) => `/chat/${id}`, [])

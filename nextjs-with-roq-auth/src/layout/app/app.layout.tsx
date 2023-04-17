@@ -1,18 +1,14 @@
-import { ReactNode, useCallback } from "react";
-import Head from "next/head";
-import styles from "layout/app/app.layout.module.css";
-import Image from "next/image";
-import {
-  ChatMessageBell,
-  NotificationBell,
-  signOut,
-  useSession,
-  UserAccountDropdown,
-} from "@roq/nextjs";
-import { useRouter } from "next/router";
-import { routes } from "routes";
-
-import Link from "next/link";
+import { ReactNode, useCallback, useState } from 'react';
+import Head from 'next/head';
+import styles from 'layout/app/app.layout.module.css';
+import Image from 'next/image';
+import { ChatMessageBell, NotificationBell, signOut, UserAccountDropdown, useSession, } from '@roq/nextjs';
+import { useRouter } from 'next/router';
+import { routes } from 'routes';
+import { toast } from 'react-hot-toast';
+import Link from 'next/link';
+import { MenuIcon } from '../../components/icons/menu.icon';
+import { CollapseIcon } from 'components/icons/collapse.icon';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -33,6 +29,7 @@ export default function AppLayout({
   description,
 }: AppLayoutProps) {
   const router = useRouter();
+  const [isOpen, setOpen] = useState(true);
   const { session, status } = useSession();
   {
     /*
@@ -49,23 +46,27 @@ export default function AppLayout({
     <>
       <Head>
         <title>ROQ Next.js Kickstarter</title>
-        <meta name="description" content="ROQ Kickstarter with Next.js" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <meta name="description" content="ROQ Kickstarter with Next.js"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="icon" href="/favicon.ico"/>
       </Head>
       <div className={styles.app}>
         <section className={styles.container}>
-          <aside className={styles.sidebar}>
+          <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
             <div className={styles.sidebarHeader}>
-              <Link href={"/"} role="presentation" className={styles.brand}>
+              <Link href={'/'} role="presentation" className={styles.brand}>
                 <Image
-                  src="/brand.svg"
-                  alt="ROQ Logo"
-                  width={80}
-                  height={40}
-                  priority
+                    src="/brand.svg"
+                    alt="ROQ Logo"
+                    width={80}
+                    height={40}
+                    priority
                 />
               </Link>
+              <CollapseIcon
+                  className={`${styles.sidebarToggle} ${styles.sidebarToggleArrow}`}
+                  onClick={() => setOpen((v) => !v)}
+              />
             </div>
             <div className={styles.sidebarContent}>
               <nav className={styles.sidebarNavigation}>
@@ -75,7 +76,7 @@ export default function AppLayout({
                     <ul>
                       <li>
                         <Link
-                          className={
+                            className={
                             isRouteActive(routes.frontend.authentication.simple)
                               ? styles.sidebarNavigationLinkActive
                               : ""
@@ -300,6 +301,42 @@ export default function AppLayout({
                           Custom Icon
                         </Link>
                       </li>
+                      <li>
+                        <Link
+                          className={
+                            isRouteActive(routes.frontend.chat.withCallBacks)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.chat.withCallBacks}
+                        >
+                          Chat (with Callbacks)
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                            className={
+                              isRouteActive(routes.frontend.chat.withCallBacks)
+                                  ? styles.sidebarNavigationLinkActive
+                                  : ''
+                            }
+                            href={routes.frontend.chat.serverSideRequests}
+                        >
+                          Chat (with Server side requests)
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                            className={
+                              isRouteActive(routes.frontend.chat.fetchConversation)
+                                  ? styles.sidebarNavigationLinkActive
+                                  : ''
+                            }
+                            href={routes.frontend.chat.fetchConversation}
+                        >
+                          Create & Fetch Conversation with Users
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                   <li>
@@ -346,9 +383,23 @@ export default function AppLayout({
                       <li>
                         <Link
                           className={
-                            isRouteActive(routes.frontend.files.serverSide)
+                            isRouteActive(
+                              routes.frontend.files.dropdzoneWithCallbacks
+                            )
                               ? styles.sidebarNavigationLinkActive
                               : ""
+                          }
+                          href={routes.frontend.files.dropdzoneWithCallbacks}
+                        >
+                          File Dropzone (With Callbacks)
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className={
+                            isRouteActive(routes.frontend.files.serverSide)
+                                ? styles.sidebarNavigationLinkActive
+                                : ''
                           }
                           href={routes.frontend.files.serverSide}
                         >
@@ -357,34 +408,56 @@ export default function AppLayout({
                       </li>
                     </ul>
                   </li>
+                  <li>
+                    <span>User Profile</span>
+                    <ul>
+                      <li>
+                        <Link
+                            className={
+                              isRouteActive(routes.frontend.profile.home)
+                                  ? styles.sidebarNavigationLinkActive
+                                  : ''
+                            }
+                            href={routes.frontend.profile.home}
+                        >
+                          Profile
+                        </Link>
+                      </li>
+                    </ul>
+                  </li>
                 </ul>
               </nav>
             </div>
-            {status === "authenticated" && (
-              <div className={styles.sidebarFooter}>
-                <p className={styles.userEmail}>
-                  👋 Hello {session?.user?.email}
-                </p>
-              </div>
+            {status === 'authenticated' && (
+                <div className={styles.sidebarFooter}>
+                  <p className={styles.userEmail}>
+                    👋 Hello {session?.user?.email}
+                  </p>
+                </div>
             )}
           </aside>
-
-          {/*  */}
-          <section className={styles.content}>
+          <section className={`${styles.content} ${isOpen ? styles.contentWithSidebar : ''}`}>
             <nav className={styles.globalNavigation}>
+              <MenuIcon className={styles.sidebarToggle} onClick={() => setOpen((v) => !v)}/>
               <ul className={styles.globalNavigationList}>
-                {status === "authenticated" && (
-                  <>
-                    <li>
-                      <NotificationBell />
-                    </li>
-                    <li>
-                      <ChatMessageBell onClick={() => router.push("/chat")} />
-                    </li>
-                    <li>
-                      <UserAccountDropdown />
-                    </li>
-                  </>
+                {status === 'authenticated' && (
+                    <>
+                      <li>
+                        <NotificationBell/>
+                      </li>
+                      <li>
+                        <ChatMessageBell onClick={() => router.push('/chat')}/>
+                      </li>
+                      <li>
+                        <UserAccountDropdown
+                            onSignOut={async () => {
+                              await signOut();
+                              toast.success('Signed out!');
+                              await router.push(routes.frontend.authentication.simple);
+                            }}
+                        />
+                      </li>
+                    </>
                 )}
               </ul>
             </nav>

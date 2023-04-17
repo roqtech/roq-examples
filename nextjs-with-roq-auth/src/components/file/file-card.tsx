@@ -1,6 +1,6 @@
-import styles from "components/file/file-card.module.css";
-import Card from "components/card";
-import { UserFile } from "components/file/types";
+import styles from 'components/file/file-card.module.css';
+import Card from 'components/card';
+import { UserFile } from 'components/file/types';
 
 export default function FileCard({ file }: { file: UserFile }) {
   const { name, url, createdAt, createdByUser } = file;
