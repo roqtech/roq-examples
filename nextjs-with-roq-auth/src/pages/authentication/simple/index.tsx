@@ -12,7 +12,7 @@ export const SimpleLogin = () => {
     >
       <DemoLayout requireSession={false}>
         <AuthLayout>
-          <button className="btn btn-sm" onClick={signIn}>
+          <button className="btn btn-sm" onClick={() => signIn()}>
             Sign in with ROQ auth
           </button>
         </AuthLayout>
