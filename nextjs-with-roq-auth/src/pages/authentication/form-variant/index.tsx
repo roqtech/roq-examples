@@ -7,12 +7,12 @@ import styles from 'pages/authentication/form-variant/form-variant.module.css';
 import { routes } from "routes";
 
 const AuthenticationFormVariant = () => {
-  const handleBuyerAuth = useCallback(() => {
-    signUp('buyer', { postLoginRedirect: routes.frontend.authentication.formVariant })
+  const handleAdminAuth = useCallback(() => {
+    signUp('default', { postLoginRedirect: `${routes.frontend.authentication.formVariant}` })
   }, [])
 
-  const handleSellerAuth = useCallback(() => {
-    signUp('seller', { postLoginRedirect: routes.frontend.authentication.formVariant })
+  const handleMemberAuth = useCallback(() => {
+    signUp('member-form', { postLoginRedirect: `${routes.frontend.authentication.formVariant}?role=buyer` })
   }, [])
 
   return (
@@ -20,11 +20,11 @@ const AuthenticationFormVariant = () => {
       <DemoLayout requireSession={false}>
         <AuthLayout>
           <div className={styles.container}>
-            <button className="btn btn-sm" onClick={handleBuyerAuth}>
-              Sign Up with ROQ as Buyer
+            <button className="btn btn-sm" onClick={handleAdminAuth}>
+              Sign Up with ROQ as Admin
             </button>
-            <button className="btn btn-sm" onClick={handleSellerAuth}>
-              Sign Up with ROQ as Seller
+            <button className="btn btn-sm" onClick={handleMemberAuth}>
+              Sign Up with ROQ as Member
             </button>
           </div>
         </AuthLayout>
