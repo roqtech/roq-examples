@@ -15,7 +15,6 @@ function ChatPage() {
   const [recentConversationId, setRecentConversationId] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-
   const handleCreatePrivateConversation = async () => {
     setIsTagApplied(false);
     setLoading(true);
@@ -70,6 +69,19 @@ function ChatPage() {
       const { data } = await response.json();
       toast.success(`Conversation with System Bot Created!`);
       setRecentConversationId(data?.createConversation?.id)
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendRegularMessage = async () => {
+    setIsTagApplied(false);
+    setLoading(true);
+    try {
+      const response = await fetch(routes.server.chat.sendRegularMessage, { method: 'POST' });
+      const { data } = await response.json();
+      console.log('handleSendRegularMessage -> data:', data)
+      toast.success(`Sent a message to latest conversation`);
     } finally {
       setLoading(false);
     }
@@ -154,6 +166,12 @@ function ChatPage() {
 
             >
               Send a &quot;system&quot; message
+            </button>
+            <button className="btn btn-sm m5" onClick={handleSendRegularMessage}
+                    disabled={loading}
+
+            >
+              Send a regular message
             </button>
             <button
                 className="btn btn-sm m5"

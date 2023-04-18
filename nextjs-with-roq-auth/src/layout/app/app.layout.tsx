@@ -302,7 +302,7 @@ export default function AppLayout({
                       <li>
                         <Link
                             className={
-                              isRouteActive(routes.frontend.chat.withCallBacks)
+                              isRouteActive(routes.frontend.chat.serverSideRequests)
                                   ? styles.sidebarNavigationLinkActive
                                   : ''
                             }

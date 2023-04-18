@@ -60,6 +60,7 @@ export const routes = Object.freeze({
       createPrivateConversation: '/api/chat/create-1-1-conversation',
       createGroupConversation: '/api/chat/create-group-conversation',
       sendSystemMessage: '/api/chat/send-system-message',
+      sendRegularMessage: '/api/chat/send-message',
       createConversationWithTags: '/api/chat/assign-tags',
       unassignConversationTags: '/api/chat/unassign-conversation-tags',
       deleteConversation: '/api/chat/delete-conversation',
