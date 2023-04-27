@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession, withAuth } from '@roq/nextjs';
-import { faker } from '@faker-js/faker';
 import { roqClient } from 'server/roq';
-import sampleSize from 'lodash/sampleSize';
-import { randomUUID } from 'crypto';
+import { UserService } from '../../../server/services/user.service';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -22,22 +20,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     let conv
     const convs = await roqClient.asUser(session.roqUserId).conversations();
     if (!convs || convs.conversations?.data?.length === 0) {
-      const user = await roqClient.asSuperAdmin().createUser({
-        user: {
-          firstName: faker.name.firstName(),
-          lastName: faker.name.lastName(),
-          email: faker.internet.email(),
-          password: faker.internet.password(),
-          active: true,
-          isOptedIn: true,
-          customData: {
-            countryCode: "EN",
-            gender: faker.name.gender(),
-          },
-          reference: randomUUID(),
-        },
-      });
-  
+      const user = await UserService.createUser();
       // Create the conversation
       const data = await roqClient.asUser(session.roqUserId).createConversation({
         conversation: {

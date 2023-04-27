@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession, withAuth } from '@roq/nextjs';
 import { faker } from '@faker-js/faker';
 import { roqClient } from 'server/roq';
-import sampleSize from 'lodash/sampleSize';
-import { randomUUID } from 'crypto';
+import { UserService } from '../../../server/services/user.service';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -15,46 +14,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(200).json({ success: false });
   }
   try {
-    const users = sampleSize(
-        await (
-            await roqClient.asSuperAdmin().users({ limit: 10 })
-        ).users?.data,
-        5
-    );
-
     // Create a user to chat with
-    const userOne = await roqClient.asSuperAdmin().createUser({
-      user: {
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        active: true,
-        isOptedIn: true,
-        customData: {
-          countryCode: "EN",
-          gender: faker.name.gender(),
-        },
-        reference: randomUUID(),
-      },
-    });
-
+    const userOne = await UserService.createUser();
     // Create a second user to chat with
-    const userTwo = await roqClient.asSuperAdmin().createUser({
-      user: {
-        firstName: faker.name.firstName(),
-        lastName: faker.name.lastName(),
-        email: faker.internet.email(),
-        password: faker.internet.password(),
-        active: true,
-        isOptedIn: true,
-        customData: {
-          countryCode: "EN",
-          gender: faker.name.gender(),
-        },
-        reference: randomUUID(),
-      },
-    });
+    const userTwo = await UserService.createUser();
 
     const { groupName } = JSON.parse(req?.body);
     // Create the conversation
