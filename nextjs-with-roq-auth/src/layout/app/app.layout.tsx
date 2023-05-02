@@ -1,14 +1,20 @@
-import { ReactNode, useCallback, useState } from 'react';
-import Head from 'next/head';
-import styles from 'layout/app/app.layout.module.css';
-import Image from 'next/image';
-import { ChatMessageBell, NotificationBell, signOut, UserAccountDropdown, useSession, } from '@roq/nextjs';
-import { useRouter } from 'next/router';
-import { routes } from 'routes';
-import { toast } from 'react-hot-toast';
-import Link from 'next/link';
-import { MenuIcon } from '../../components/icons/menu.icon';
-import { CollapseIcon } from 'components/icons/collapse.icon';
+import { ReactNode, useCallback, useState } from "react";
+import Head from "next/head";
+import styles from "layout/app/app.layout.module.css";
+import Image from "next/image";
+import {
+  ChatMessageBell,
+  NotificationBell,
+  signOut,
+  UserAccountDropdown,
+  useSession,
+} from "@roq/nextjs";
+import { useRouter } from "next/router";
+import { routes } from "routes";
+import { toast } from "react-hot-toast";
+import Link from "next/link";
+import { MenuIcon } from "../../components/icons/menu.icon";
+import { CollapseIcon } from "components/icons/collapse.icon";
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -46,26 +52,28 @@ export default function AppLayout({
     <>
       <Head>
         <title>ROQ Next.js Kickstarter</title>
-        <meta name="description" content="ROQ Kickstarter with Next.js"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="icon" href="/favicon.ico"/>
+        <meta name="description" content="ROQ Kickstarter with Next.js" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={styles.app}>
         <section className={styles.container}>
-          <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
+          <aside
+            className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}
+          >
             <div className={styles.sidebarHeader}>
-              <Link href={'/'} role="presentation" className={styles.brand}>
+              <Link href={"/"} role="presentation" className={styles.brand}>
                 <Image
-                    src="/brand.svg"
-                    alt="ROQ Logo"
-                    width={80}
-                    height={40}
-                    priority
+                  src="/brand.svg"
+                  alt="ROQ Logo"
+                  width={80}
+                  height={40}
+                  priority
                 />
               </Link>
               <CollapseIcon
-                  className={`${styles.sidebarToggle} ${styles.sidebarToggleArrow}`}
-                  onClick={() => setOpen((v) => !v)}
+                className={`${styles.sidebarToggle} ${styles.sidebarToggleArrow}`}
+                onClick={() => setOpen((v) => !v)}
               />
             </div>
             <div className={styles.sidebarContent}>
@@ -76,7 +84,7 @@ export default function AppLayout({
                     <ul>
                       <li>
                         <Link
-                            className={
+                          className={
                             isRouteActive(routes.frontend.authentication.simple)
                               ? styles.sidebarNavigationLinkActive
                               : ""
@@ -129,6 +137,20 @@ export default function AppLayout({
                           href={routes.frontend.userManagement.createUser}
                         >
                           Create user programmatically
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className={
+                            isRouteActive(
+                              routes.frontend.userManagement.customLogin
+                            )
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.userManagement.customLogin}
+                        >
+                          Custom Login
                         </Link>
                       </li>
                     </ul>
@@ -301,24 +323,28 @@ export default function AppLayout({
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.chat.serverSideRequests)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.chat.serverSideRequests}
+                          className={
+                            isRouteActive(
+                              routes.frontend.chat.serverSideRequests
+                            )
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.chat.serverSideRequests}
                         >
                           Chat (with Server side requests)
                         </Link>
                       </li>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.chat.fetchConversation)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.chat.fetchConversation}
+                          className={
+                            isRouteActive(
+                              routes.frontend.chat.fetchConversation
+                            )
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.chat.fetchConversation}
                         >
                           Create & Fetch Conversation with Users
                         </Link>
@@ -384,8 +410,8 @@ export default function AppLayout({
                         <Link
                           className={
                             isRouteActive(routes.frontend.files.serverSide)
-                                ? styles.sidebarNavigationLinkActive
-                                : ''
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
                           }
                           href={routes.frontend.files.serverSide}
                         >
@@ -399,12 +425,12 @@ export default function AppLayout({
                     <ul>
                       <li>
                         <Link
-                            className={
-                              isRouteActive(routes.frontend.profile.home)
-                                  ? styles.sidebarNavigationLinkActive
-                                  : ''
-                            }
-                            href={routes.frontend.profile.home}
+                          className={
+                            isRouteActive(routes.frontend.profile.home)
+                              ? styles.sidebarNavigationLinkActive
+                              : ""
+                          }
+                          href={routes.frontend.profile.home}
                         >
                           Profile
                         </Link>
@@ -414,36 +440,45 @@ export default function AppLayout({
                 </ul>
               </nav>
             </div>
-            {status === 'authenticated' && (
-                <div className={styles.sidebarFooter}>
-                  <p className={styles.userEmail}>
-                    👋 Hello {session?.user?.email}
-                  </p>
-                </div>
+            {status === "authenticated" && (
+              <div className={styles.sidebarFooter}>
+                <p className={styles.userEmail}>
+                  👋 Hello {session?.user?.email}
+                </p>
+              </div>
             )}
           </aside>
-          <section className={`${styles.content} ${isOpen ? styles.contentWithSidebar : ''}`}>
+          <section
+            className={`${styles.content} ${
+              isOpen ? styles.contentWithSidebar : ""
+            }`}
+          >
             <nav className={styles.globalNavigation}>
-              <MenuIcon className={styles.sidebarToggle} onClick={() => setOpen((v) => !v)}/>
+              <MenuIcon
+                className={styles.sidebarToggle}
+                onClick={() => setOpen((v) => !v)}
+              />
               <ul className={styles.globalNavigationList}>
-                {status === 'authenticated' && (
-                    <>
-                      <li>
-                        <NotificationBell/>
-                      </li>
-                      <li>
-                        <ChatMessageBell onClick={() => router.push('/chat')}/>
-                      </li>
-                      <li>
-                        <UserAccountDropdown
-                            onSignOut={async () => {
-                              await signOut();
-                              toast.success('Signed out!');
-                              await router.push(routes.frontend.authentication.simple);
-                            }}
-                        />
-                      </li>
-                    </>
+                {status === "authenticated" && (
+                  <>
+                    <li>
+                      <NotificationBell />
+                    </li>
+                    <li>
+                      <ChatMessageBell onClick={() => router.push("/chat")} />
+                    </li>
+                    <li>
+                      <UserAccountDropdown
+                        onSignOut={async () => {
+                          await signOut();
+                          toast.success("Signed out!");
+                          await router.push(
+                            routes.frontend.authentication.simple
+                          );
+                        }}
+                      />
+                    </li>
+                  </>
                 )}
               </ul>
             </nav>
